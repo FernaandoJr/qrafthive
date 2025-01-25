@@ -15,7 +15,7 @@ export function StatisticsTrip({ stats }: StatisticsTripProps) {
                     <div key={index} className="w-full md:w-1/2 lg:w-1/4 py-8">
                         <div
                             className={`px-12 ${index !== stats.length - 1
-                                ? 'lg:border-r md:border-r border-gray-200'
+                                ? 'lg:border-r md:border-r border-slate-900 dark:border-gray-200'
                                 : ''
                                 }`}
                         >
