@@ -2,6 +2,7 @@ import Examples from '../components/examples'
 import { StatisticsTrip } from '@/components/statistics-trip';
 import { Hero } from '../components/hero'
 
+
 export default function Home() {
 
   const stats = [
@@ -9,7 +10,6 @@ export default function Home() {
     { value: "10,000+", label: "QR Codes possibilities" },
     { value: "350+", label: "Satisfied users" },
   ];
-
 
   return (
     <>

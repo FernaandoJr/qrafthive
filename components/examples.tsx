@@ -1,5 +1,6 @@
 import Image from 'next/image'
 
+
 export default function Examples() {
     return (
         <section className="rounded-md flex justify-center text-gray-600 body-font">
