@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import { Analytics } from "@vercel/analytics/react"
-
 import { Footerdemo } from "@/components/ui/footer-section"
-
 import { Inter } from "next/font/google"
 import "./globals.css"
 import Navbar from "@/components/navbar"
