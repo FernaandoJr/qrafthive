@@ -1,17 +1,17 @@
+import ButtonLink from "@/components/ui/buttonlink"
 import Link from "next/link"
 import { QrCode } from "lucide-react"
-import ButtonLink from "@/components/ui/buttonlink"
-import { ModeToggle  } from "@/components/ui/theme-menu"
+import { ModeToggle } from "@/components/ui/theme-menu"
 
 const navLinks = [
-	{
-		name: "Login",
-		path: "/login"
-	},
-	{
-		name: "QRCode",
-		path: "/qrcode"
-	}
+    {
+        name: "Login",
+        path: "/login",
+    },
+    {
+        name: "QRCode",
+        path: "/qrcode",
+    },
 ]
 
 const Navbar = () => {
