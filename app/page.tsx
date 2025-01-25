@@ -10,6 +10,7 @@ export default function Home() {
     { value: "350+", label: "Satisfied users" },
   ];
 
+
   return (
     <>
       <div className="overflow-x-hidden">
