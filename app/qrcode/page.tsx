@@ -9,7 +9,7 @@ export default function Qrcode() {
     return (
         <div className="rounded-lg container mx-auto px-4 py-12 md:px-6 lg:px-8">
             {
-                // Lista das Janelas
+                // Lista das Janelas teste
             }
             <Tabs defaultValue="information" className="w-full">
                 <TabsList className="grid w-full grid-cols-3 mb-4">
