@@ -14,7 +14,6 @@ export function Hero() {
                 Generate Now  &rarr;
             </Link>
             <BackgroundBeams />
-
         </div>
     )
 }
