@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
+import { ThemeProvider } from "@/components/ui/theme-provider"
+
+import { Footerdemo } from "@/components/ui/footer-section";
+
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/navbar";
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -15,11 +20,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.className} antialiased`}
       >
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <Navbar />
+          {children}
+        </ThemeProvider>
+        <div className="block mt-8">
+          <Footerdemo />
+        </div>
       </body>
     </html>
   );
