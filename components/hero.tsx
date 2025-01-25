@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { BackgroundBeams } from "../components/ui/background-beams"
 
-
 export function Hero() {
     return (
         <div className="h-600px flex md:min-h-[80vh] flex-col w-full gap-4 items-center justify-center px-4">
@@ -15,7 +14,6 @@ export function Hero() {
                 Generate Now  &rarr;
             </Link>
             <BackgroundBeams />
-
         </div>
     )
 }
