@@ -1,5 +1,4 @@
-// import Image from 'next/image'
-// import { PinContainer } from "./ui/3d-pin";
+import Image from 'next/image'
 
 export default function Examples() {
     return (
@@ -10,26 +9,38 @@ export default function Examples() {
                         See the Power of Custom
                         <br className="hidden lg:inline-block" /> QR Codes in Action
                     </h1>
-                    <p className="mb-8 leading-relaxed">Personalize every detail to make your QR codes stand out. Perfect for your business, events, or personal touch.</p>
+                    <p className="mb-8 leading-relaxed">
+                        Personalize every detail to make your QR codes stand out. Perfect for your business, events, or personal touch.
+                    </p>
                     <div className="flex justify-center lg:justify-start">
-                        <button className="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Customize Yours Now</button>
+                        <button className="inline-flex text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+                            Customize Yours Now
+                        </button>
                     </div>
                 </div>
 
-                <div className="h-[40rem] w-full flex items-center justify-center ">
-                    {/* // eu deixei comentado pq tava dando erro, ai depois precisa pegar pra analisar o erro
-						
-					<PinContainer title="/your-url-example.com" href="https://fernaandojr.vercel.app/">
-                        <div className="flex basis-full flex-col p-4 tracking-tight text-slate-100/50 sm:basis-1/2 w-[20rem] h-[20rem] ">
-                            <h3 className="max-w-xs !pb-2 !m-0 font-bold  text-base text-slate-100">Your Custom QR Code</h3>
-                            <div className="text-base !m-0 !p-0 font-normal">
-                                <span className="text-slate-500 ">Customize with your logo and share with style.</span>
-                            </div>
-                            <Image src="/image.jpg" width={400} height={400} alt="QR Code Example" className="rounded-lg shadow-lg" />
+                <div className="h-[26rem] w-full flex items-center justify-center ">
+
+                    <div className="flex basis-full flex-col p-4 tracking-tight text-slate-100/50 sm:basis-1/2 w-[20rem] h-[20rem] ">
+                        <h3 className="max-w-xs !pb-2 !m-0 font-bold  text-base text-slate-100">
+                            Your Custom QR Code
+                        </h3>
+                        <div className="text-base !m-0 !p-0 font-normal">
+                            <span className="text-slate-500 ">
+                                Customize with your logo and share with style.
+                            </span>
                         </div>
-                    </PinContainer> */}
+                        <Image
+                            src="/image.jpg"
+                            width={400}
+                            height={400}
+                            alt="QR Code Example"
+                            className="rounded-lg shadow-lg"
+                        />
+                    </div>
                 </div>
             </div>
         </section>
     )
+
 }
