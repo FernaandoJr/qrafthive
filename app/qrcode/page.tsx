@@ -30,25 +30,21 @@ export default function Qrcode() {
     const [errorLevel, setErrorLevel] = useState<ErrorLevel>("L")
 
     return (
-        <div className="rounded-lg max-w-[1200px] mx-auto px-4 py-12 md:px-6 lg:px-8 flex flex-row justify-center">
+        <div className="rounded-lg max-w-[1200px] mx-auto px-4 py-12 md:px-6 lg:px-8 flex flex-row justify-center md:max-w-[800px]">
             {
                 // Lista das Janelas
             }
-            <Tabs defaultValue="information" className="container flex flex-col items-center">
-                <TabsList className="grid min-w-[900px] grid-cols-3 mb-4">
+            <Tabs defaultValue="information" className="container flex flex-col items-center md:max-w-[800px] sm:w-full">
+                <TabsList className="grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-2 mb-4 w-full">
                     <TabsTrigger value="information">Information</TabsTrigger>
                     <TabsTrigger value="color">Color</TabsTrigger>
                     <TabsTrigger value="image">Image</TabsTrigger>
                 </TabsList>
-                <div className=" w-[900px] flex flex-row  border border-border rounded-xl p-8 h-fit">
-                    {
-                        // Conteúdo de Informações do QRCode
-                    }
-                    <TabsContent value="information" className="w-[800px]">
-                        <div className="input-div gap-5 w-3/4">
-                            {
-                                // Error Level
-                            }
+                <div className="flex flex-col sm:flex-row sm:gap-8 w-full border border-border rounded-xl p-8 h-fit">
+                    {/* Conteúdo de Informações do QRCode */}
+                    <TabsContent value="information" className="w-full sm:w-[800px]">
+                        <div className="input-div gap-5 w-full sm:w-3/4">
+                            {/* Error Level */}
                             <div className="input-div">
                                 <Label className="text-muted-foreground">Select the Error Level</Label>
                                 <Select
@@ -72,9 +68,7 @@ export default function Qrcode() {
                                     </SelectContent>
                                 </Select>
                             </div>
-                            {
-                                // Margin Size
-                            }
+                            {/* Margin Size */}
                             <div className="input-div">
                                 <Label htmlFor="margin-size" className="text-muted-foreground">
                                     Change the margin size
@@ -91,9 +85,7 @@ export default function Qrcode() {
                                     }}
                                 />
                             </div>
-                            {
-                                // Boost Level
-                            }
+                            {/* Boost Level */}
                             <div className="flex flex-row gap-2 items-center">
                                 <Checkbox
                                     id="boost-level"
@@ -104,9 +96,7 @@ export default function Qrcode() {
                                 />
                                 <Label htmlFor="boost-level">Boost level</Label>
                             </div>
-                            {
-                                // Content
-                            }
+                            {/* Content */}
                             <div className="input-div">
                                 <Label htmlFor="value-textarea" className="text-muted-foreground">
                                     Content
@@ -122,11 +112,10 @@ export default function Qrcode() {
                             </div>
                         </div>
                     </TabsContent>
-                    {
-                        // Conteúdo sobre Cores do QRCode
-                    }
-                    <TabsContent value="color" className="w-[800px]">
-                        <div className="input-div gap-5 w-3/4">
+
+                    {/* Conteúdo sobre Cores do QRCode */}
+                    <TabsContent value="color" className="w-full sm:w-[800px]">
+                        <div className="input-div gap-5 w-full sm:w-3/4">
                             <div className="input-div">
                                 <Label htmlFor="background-color" className="text-muted-foreground">
                                     Background Color
@@ -139,7 +128,7 @@ export default function Qrcode() {
                                 />
                             </div>
                             <div className="input-div">
-                                <Label htmlFor="background-color" className="text-muted-foreground">
+                                <Label htmlFor="foreground-color" className="text-muted-foreground">
                                     Foreground Color
                                 </Label>
                                 <AdvancedColorPicker
@@ -151,15 +140,10 @@ export default function Qrcode() {
                             </div>
                         </div>
                     </TabsContent>
-                    {
-                        // ver um jeito de fazer um set de imagens padrão pra selecionar, tipo instagram, facebook, sinal de wifi
-                        // scan me etc
-                    }
-                    {
-                        // Conteúdo sobre Imagens do QRCode
-                    }
-                    <TabsContent value="image" className="w-[800px]">
-                        <div className="input-div gap-5 w-3/4">
+
+                    {/* Conteúdo sobre Imagens do QRCode */}
+                    <TabsContent value="image" className="w-full sm:w-[800px]">
+                        <div className="input-div gap-5 w-full sm:w-3/4">
                             <div className="input-div">
                                 <Label htmlFor="picture" className="text-muted-foreground">
                                     Custom image
@@ -216,18 +200,28 @@ export default function Qrcode() {
                             </div>
                         </div>
                     </TabsContent>
-                    {
-                        // Parte direita do QRCode
-                    }
-                    <div className="flex items-center ">
-                        <Separator orientation="vertical" className="mx-10" />
-                        <div className="flex flex-col">
-                            <QRCodeSVG value={content} size={300} marginSize={marginSize} fgColor={fgColor} bgColor={bgColor} level={errorLevel} boostLevel={boostLevel} />
-                            <Button className="m-5">Download</Button>
+
+                    {/* Parte direita do QRCode */}
+                    <div className="flex items-center justify-center sm:w-full sm:mt-4 md:mt-0">
+                        <Separator orientation="vertical" className="mx-10 hidden sm:block lg:block" />
+                        <div className="flex flex-col items-center">
+                            <Separator orientation="horizontal" className="mx-8 mt-8 mb-4 block lg:hidden" />
+                            <QRCodeSVG
+                                value="https://QRaftHive.vercel.app"
+                                size={300}
+                                marginSize={-10}
+                                fgColor={fgColor}
+                                bgColor={bgColor}
+                                className="my-4"
+                            />
+                            <Button className="mb-4">Download</Button>
                         </div>
                     </div>
+
                 </div>
             </Tabs>
+
+
         </div>
     )
 }
