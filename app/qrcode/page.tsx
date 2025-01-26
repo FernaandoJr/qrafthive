@@ -12,22 +12,26 @@ import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 type ErrorLevel = "L" | "M" | "Q" | "H"
 
 export default function Qrcode() {
     const [bgColor, setBgColor] = useState("#FFFFFF")
     const [fgColor, setFgColor] = useState("#000000")
-    const [imageX, setImageX] = useState([0])
-    const [imageY, setImageY] = useState([0])
-    const [marginSize, setMarginSize] = useState(2)
+    const [imageX, setImageX] = useState<number | undefined>(undefined)
+    const [imageY, setImageY] = useState<number | undefined>(undefined)
+    const [marginSize, setMarginSize] = useState(1)
     const [boostLevel, setBoostLevel] = useState(true)
-    // const [centerImage, setCenterImage] = useState(true)
-    // const [excavateImage, setExcavateImage] = useState(true)
-    // const [imageScale, setImageScale] = useState(true)
-    // const [imageWidth, setImageWidth] = useState(0)
-    // const [imageHeight, setImageHeight] = useState(0)
+    const [centerImage, setCenterImage] = useState(true)
+    const [excavateImage, setExcavateImage] = useState(true)
+    const [imageScale, setImageScale] = useState(true)
+    const [imageWidth, setImageWidth] = useState(50)
+    const [imageHeight, setImageHeight] = useState(50)
     const [content, setContent] = useState("https://QRaftHive.vercel.app")
-    const [errorLevel, setErrorLevel] = useState<ErrorLevel>("L")
+    const [errorLevel, setErrorLevel] = useState<ErrorLevel>("M")
+    const [imageURL, setImageURL] = useState<string>("https://avatars.githubusercontent.com/u/77449521?s=200&v=4")
+    const [imageSize, setImageSize] = useState(300)
 
     return (
         <div className="rounded-lg max-w-[1200px] mx-auto px-4 py-12 md:px-6 lg:px-8 flex flex-row justify-center md:max-w-[800px]">
@@ -146,12 +150,24 @@ export default function Qrcode() {
                         <div className="input-div gap-5 w-full sm:w-3/4">
                             <div className="input-div">
                                 <Label htmlFor="picture" className="text-muted-foreground">
-                                    Custom image
+                                    Custom image URL
                                 </Label>
-                                <Input id="picture" type="file" accept="image/*" />
+                                <Input id="picture" type="text" value={imageURL} onChange={(event) => setImageURL(event.target.value)} />
                             </div>
+                            {
+                                // escala da imagem
+                            }
                             <div className="flex flex-row gap-2 items-center">
-                                <Checkbox id="image-scale" defaultChecked />
+                                <Checkbox
+                                    id="image-scale"
+                                    checked={imageScale}
+                                    onCheckedChange={(newValue: boolean) => {
+                                        setImageScale(newValue)
+                                        if (newValue) {
+                                            setImageHeight(imageWidth)
+                                        }
+                                    }}
+                                />
                                 <Label htmlFor="image-scale">Maintain image scale</Label>
                             </div>
                             <div className="flex flex-row gap-5">
@@ -159,43 +175,85 @@ export default function Qrcode() {
                                     <Label htmlFor="image-width" className="text-muted-foreground">
                                         Width
                                     </Label>
-                                    <Input id="image-width" type="number" min={0} />
+                                    <Input
+                                        id="image-width"
+                                        type="number"
+                                        min={0}
+                                        value={imageWidth}
+                                        max={imageSize}
+                                        onChange={(event) => {
+                                            if (imageScale) {
+                                                setImageWidth(Number(event.target.value))
+                                                setImageHeight(Number(event.target.value))
+                                            } else {
+                                                setImageWidth(Number(event.target.value))
+                                            }
+                                        }}
+                                    />
                                 </div>
                                 <div className="input-div">
                                     <Label htmlFor="image-height" className="text-muted-foreground">
                                         Height
                                     </Label>
-                                    <Input id="image-height" type="number" min={0} />
+                                    <Input
+                                        id="image-height"
+                                        type="number"
+                                        min={0}
+                                        value={imageHeight}
+                                        max={imageSize}
+                                        onChange={(event) => {
+                                            if (imageScale) {
+                                                setImageHeight(Number(event.target.value))
+                                                setImageWidth(Number(event.target.value))
+                                            } else {
+                                                setImageHeight(Number(event.target.value))
+                                            }
+                                        }}
+                                    />
                                 </div>
                             </div>
 
                             <div className="flex flex-row gap-2 items-center">
-                                <Checkbox id="center-image" defaultChecked />
+                                <Checkbox
+                                    id="center-image"
+                                    checked={centerImage}
+                                    onCheckedChange={(NewValue: boolean) => {
+                                        setCenterImage(NewValue)
+                                        if (NewValue) {
+                                            setImageX(undefined)
+                                            setImageY(undefined)
+                                        } else {
+                                            setImageX(0)
+                                            setImageY(0)
+                                        }
+                                    }}
+                                />
                                 <Label htmlFor="center-image">Center Image</Label>
                             </div>
-                            <div className="flex flex-row gap-5 w-full">
-                                <div className="input-div min-w-[200px]">
-                                    <div className="flex justify-between items-center">
-                                        <Label htmlFor="image-height" className="text-muted-foreground">
-                                            Image X
-                                        </Label>
-                                        <output className="text-sm font-medium tabular-nums text-right">{imageX[0]}</output>
+                            {centerImage === false && (
+                                <div className="flex flex-row gap-5 w-full">
+                                    <div className="input-div min-w-[190px]">
+                                        <div className="flex justify-between items-center">
+                                            <Label htmlFor="image-height" className="text-muted-foreground">
+                                                Image X
+                                            </Label>
+                                            <output className="text-sm font-medium tabular-nums text-right">{imageX}</output>
+                                        </div>
+                                        <Slider value={imageX ? [imageX] : [0]} onValueChange={(value) => setImageX(value[0])} aria-label="Slider with output" max={imageSize - imageWidth} />
                                     </div>
-                                    <Slider value={imageX} onValueChange={setImageX} aria-label="Slider with output" max={100} />
-                                </div>
-
-                                <div className="input-div min-w-[200px]">
-                                    <div className="flex justify-between items-center">
-                                        <Label htmlFor="image-height" className="text-muted-foreground">
-                                            Image Y
-                                        </Label>
-                                        <output className="text-sm font-medium tabular-nums text-right">{imageY[0]}</output>
+                                    <div className="input-div min-w-[190px]">
+                                        <div className="flex justify-between items-center">
+                                            <Label htmlFor="image-height" className="text-muted-foreground">
+                                                Image Y
+                                            </Label>
+                                            <output className="text-sm font-medium tabular-nums text-right">{imageY}</output>
+                                        </div>
+                                        <Slider value={imageY ? [imageY] : [0]} onValueChange={(value) => setImageY(value[0])} aria-label="Slider with output" max={imageSize - imageHeight} />
                                     </div>
-                                    <Slider value={imageY} onValueChange={setImageY} aria-label="Slider with output" max={100} />
                                 </div>
-                            </div>
+                            )}
                             <div className="flex flex-row gap-2 items-center">
-                                <Checkbox id="excavate-image" defaultChecked />
+                                <Checkbox id="excavate-image" checked={excavateImage} onCheckedChange={(newValue: boolean) => setExcavateImage(newValue)} />
                                 <Label htmlFor="excavate-image">Excavate</Label>
                             </div>
                         </div>
@@ -206,8 +264,8 @@ export default function Qrcode() {
                         <Separator orientation="vertical" className="mx-10 hidden sm:block lg:block" />
                         <div className="flex flex-col items-center">
                             <Separator orientation="horizontal" className="mx-8 mt-8 mb-4 block lg:hidden" />
-                            <QRCodeSVG value={content} size={300} marginSize={marginSize} fgColor={fgColor} bgColor={bgColor} level={errorLevel} boostLevel={boostLevel} className="my-4" />
-                            <Button className="mb-4">Download</Button>
+                            <QRCodeSVG value={content} size={imageSize} marginSize={marginSize} fgColor={fgColor} bgColor={bgColor} level={errorLevel} boostLevel={boostLevel} imageSettings={{ src: imageURL, excavate: excavateImage, height: imageHeight, width: imageWidth, x: imageX, y: imageY }} className="my-4 h-[250px] w-[250px]" />
+                            <Button className="m-5 ">Download</Button>
                         </div>
                     </div>
                 </div>
