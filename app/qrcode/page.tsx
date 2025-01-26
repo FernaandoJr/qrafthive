@@ -34,7 +34,7 @@ export default function Qrcode() {
             {
                 // Lista das Janelas
             }
-            <Tabs defaultValue="information" className="container flex flex-col items-center md:max-w-[800px] sm:w-full">
+            <Tabs defaultValue="information" className="container flex flex-col items-center min-w-[950px] max-w-[900px] sm:w-full">
                 <TabsList className="grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-2 mb-4 w-full">
                     <TabsTrigger value="information">Information</TabsTrigger>
                     <TabsTrigger value="color">Color</TabsTrigger>
