@@ -175,7 +175,7 @@ export default function Qrcode() {
                     <div className="flex items-center justify-center sm:w-full sm:mt-4 md:mt-0">
                         <Separator orientation="vertical" className="mx-10 hidden sm:block lg:block" />
                         <div className="flex flex-col items-center">
-                            <Separator orientation="horizontal" className="mx-8 mt-8 mb-4 block lg:hidden" />
+                            <Separator orientation="horizontal" className="mx-8 mt-8 mb-4 block sm:hidden md:hidden lg:hidden" />
                             <QRCodeSVG
                                 value="https://QRaftHive.vercel.app"
                                 size={300}
