@@ -206,22 +206,12 @@ export default function Qrcode() {
                         <Separator orientation="vertical" className="mx-10 hidden sm:block lg:block" />
                         <div className="flex flex-col items-center">
                             <Separator orientation="horizontal" className="mx-8 mt-8 mb-4 block lg:hidden" />
-                            <QRCodeSVG
-                                value="https://QRaftHive.vercel.app"
-                                size={300}
-                                marginSize={-10}
-                                fgColor={fgColor}
-                                bgColor={bgColor}
-                                className="my-4"
-                            />
+                            <QRCodeSVG value={content} size={300} marginSize={marginSize} fgColor={fgColor} bgColor={bgColor} level={errorLevel} boostLevel={boostLevel} className="my-4" />
                             <Button className="mb-4">Download</Button>
                         </div>
                     </div>
-
                 </div>
             </Tabs>
-
-
         </div>
     )
 }
