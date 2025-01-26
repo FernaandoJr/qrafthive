@@ -18,6 +18,14 @@ export default function Qrcode() {
     const [imageX, setImageX] = useState([0])
     const [imageY, setImageY] = useState([0])
 
+    function handleSetBgColor(color: string) {
+        setBgColor(color);
+    }
+
+    function handleSetFgColor(color: string) {
+        setFgColor(color);
+    }
+
     return (
         <div className="rounded-lg max-w-[1200px] mx-auto px-4 py-12 md:px-6 lg:px-8 flex flex-row justify-center">
             {
@@ -91,13 +99,25 @@ export default function Qrcode() {
                                 <Label htmlFor="background-color" className="text-muted-foreground">
                                     Background Color
                                 </Label>
-                                <AdvancedColorPicker color={bgColor} onChange={setBgColor} />
+                                <AdvancedColorPicker
+                                    color={bgColor}
+                                    onChange={(color: string) => {
+                                        console.log(color);
+                                        handleSetBgColor(color);
+                                    }}
+                                />
                             </div>
                             <div className="input-div">
                                 <Label htmlFor="background-color" className="text-muted-foreground">
                                     Foreground Color
                                 </Label>
-                                <AdvancedColorPicker color={fgColor} onChange={setFgColor} />
+                                <AdvancedColorPicker
+                                    color={fgColor}
+                                    onChange={(color: string) => {
+                                        console.log(color);
+                                        handleSetFgColor(color);
+                                    }}
+                                />
                             </div>
                         </div>
                     </TabsContent>
@@ -172,7 +192,13 @@ export default function Qrcode() {
                     <div className="flex items-center ">
                         <Separator orientation="vertical" className="mx-10" />
                         <div className="flex flex-col">
-                            <QRCodeSVG value="https://QRaftHive.vercel.app" size={300} marginSize={-10} />
+                            <QRCodeSVG
+                                value="https://QRaftHive.vercel.app"
+                                size={300}
+                                marginSize={-10}
+                                fgColor={fgColor}
+                                bgColor={bgColor}
+                            />
                             <Button className="m-5">Download</Button>
                         </div>
                     </div>
