@@ -38,13 +38,13 @@ export default function Qrcode() {
             {
                 // Lista das Janelas
             }
-            <Tabs defaultValue="information" className="container flex flex-col items-center min-w-[950px] max-w-[900px] sm:w-full">
-                <TabsList className="grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-2 mb-4 w-full">
+            <Tabs defaultValue="information" className="container flex flex-col items-center min-w-[300px] md:min-w-[950px] max-w-[900px] sm:w-full">
+                <TabsList className="grid grid-cols-3 md:grid-cols-3 gap-2 mb-4 w-full">
                     <TabsTrigger value="information">Information</TabsTrigger>
                     <TabsTrigger value="color">Color</TabsTrigger>
                     <TabsTrigger value="image">Image</TabsTrigger>
                 </TabsList>
-                <div className="flex flex-col sm:flex-row sm:gap-8 w-full border border-border rounded-xl p-8 h-fit">
+                <div className="flex flex-col sm:flex-col md:flex-row gap-8 w-full border border-border rounded-xl p-4 sm:p-6 md:p-8 h-fit">
                     {/* Conteúdo de Informações do QRCode */}
                     <TabsContent value="information" className="w-full sm:w-[800px]">
                         <div className="input-div gap-5 w-full sm:w-3/4">
