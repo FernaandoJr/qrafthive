@@ -8,7 +8,7 @@ export default function Home() {
         <div className="relative flex items-center justify-center min-h-screen bg-dark px-4 py-8">
             <div className="register-form flex flex-col items-center justify-center w-full md:max-w-lg bg-transparent rounded-2xl px-6 py-8">
                 <Tabs
-                    defaultValue="information"
+                    defaultValue="login"
                     className="container flex flex-col items-center w-full"
                 >
                     <TabsList className="grid grid-cols-2 gap-4 mb-6 w-full">
