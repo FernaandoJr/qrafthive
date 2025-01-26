@@ -29,3 +29,6 @@ Oferecer uma plataforma completa para criação e personalização de QR Codes, 
 - [@barcode-bakery/barcode-react](https://www.npmjs.com/package/@barcode-bakery/barcode-react)  
 - [TEC-IT QR Code Generator](https://barcode.tec-it.com/en/MobileQRLinkedInShare?data=https://www.tec-it.com)  
 - [ZXing Decoder](https://zxing.org/w/decode)
+- [vCard](https://en.wikipedia.org/wiki/VCard)
+- [Como fazer esse qrcode](https://stackoverflow.com/questions/70498657/is-it-possible-to-add-form-data-in-qr-code)
+
