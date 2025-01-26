@@ -12,19 +12,22 @@ import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 
+type ErrorLevel = "L" | "M" | "Q" | "H"
+
 export default function Qrcode() {
     const [bgColor, setBgColor] = useState("#FFFFFF")
     const [fgColor, setFgColor] = useState("#000000")
     const [imageX, setImageX] = useState([0])
     const [imageY, setImageY] = useState([0])
-
-    function handleSetBgColor(color: string) {
-        setBgColor(color);
-    }
-
-    function handleSetFgColor(color: string) {
-        setFgColor(color);
-    }
+    const [marginSize, setMarginSize] = useState(2)
+    const [boostLevel, setBoostLevel] = useState(true)
+    // const [centerImage, setCenterImage] = useState(true)
+    // const [excavateImage, setExcavateImage] = useState(true)
+    // const [imageScale, setImageScale] = useState(true)
+    // const [imageWidth, setImageWidth] = useState(0)
+    // const [imageHeight, setImageHeight] = useState(0)
+    const [content, setContent] = useState("https://QRaftHive.vercel.app")
+    const [errorLevel, setErrorLevel] = useState<ErrorLevel>("L")
 
     return (
         <div className="rounded-lg max-w-[1200px] mx-auto px-4 py-12 md:px-6 lg:px-8 flex flex-row justify-center">
@@ -48,7 +51,13 @@ export default function Qrcode() {
                             }
                             <div className="input-div">
                                 <Label className="text-muted-foreground">Select the Error Level</Label>
-                                <Select defaultValue="L">
+                                <Select
+                                    value={errorLevel}
+                                    onValueChange={(value) => {
+                                        const newErrorLevel = value as ErrorLevel
+                                        setErrorLevel(newErrorLevel)
+                                    }}
+                                >
                                     <SelectTrigger className="h-10">
                                         <SelectValue placeholder="Error Level" />
                                     </SelectTrigger>
@@ -70,13 +79,29 @@ export default function Qrcode() {
                                 <Label htmlFor="margin-size" className="text-muted-foreground">
                                     Change the margin size
                                 </Label>
-                                <Input type="number" id="margin-size" placeholder="Margin size" defaultValue={2} max={100} min={0} />
+                                <Input
+                                    type="number"
+                                    id="margin-size"
+                                    placeholder="Margin size"
+                                    max={150}
+                                    min={0}
+                                    value={marginSize}
+                                    onChange={(event) => {
+                                        setMarginSize(Number(event.target.value))
+                                    }}
+                                />
                             </div>
                             {
                                 // Boost Level
                             }
                             <div className="flex flex-row gap-2 items-center">
-                                <Checkbox id="boost-level" />
+                                <Checkbox
+                                    id="boost-level"
+                                    checked={boostLevel}
+                                    onCheckedChange={(newLevel: boolean) => {
+                                        setBoostLevel(newLevel)
+                                    }}
+                                />
                                 <Label htmlFor="boost-level">Boost level</Label>
                             </div>
                             {
@@ -86,7 +111,14 @@ export default function Qrcode() {
                                 <Label htmlFor="value-textarea" className="text-muted-foreground">
                                     Content
                                 </Label>
-                                <Textarea id="value-textarea" placeholder="Value" defaultValue="https://QRaftHive.vercel.app" />
+                                <Textarea
+                                    id="value-textarea"
+                                    placeholder="Value"
+                                    value={content}
+                                    onChange={(event) => {
+                                        setContent(event.target.value)
+                                    }}
+                                />
                             </div>
                         </div>
                     </TabsContent>
@@ -102,8 +134,7 @@ export default function Qrcode() {
                                 <AdvancedColorPicker
                                     color={bgColor}
                                     onChange={(color: string) => {
-                                        console.log(color);
-                                        handleSetBgColor(color);
+                                        setBgColor(color)
                                     }}
                                 />
                             </div>
@@ -114,8 +145,7 @@ export default function Qrcode() {
                                 <AdvancedColorPicker
                                     color={fgColor}
                                     onChange={(color: string) => {
-                                        console.log(color);
-                                        handleSetFgColor(color);
+                                        setFgColor(color)
                                     }}
                                 />
                             </div>
@@ -192,13 +222,7 @@ export default function Qrcode() {
                     <div className="flex items-center ">
                         <Separator orientation="vertical" className="mx-10" />
                         <div className="flex flex-col">
-                            <QRCodeSVG
-                                value="https://QRaftHive.vercel.app"
-                                size={300}
-                                marginSize={-10}
-                                fgColor={fgColor}
-                                bgColor={bgColor}
-                            />
+                            <QRCodeSVG value={content} size={300} marginSize={marginSize} fgColor={fgColor} bgColor={bgColor} level={errorLevel} boostLevel={boostLevel} />
                             <Button className="m-5">Download</Button>
                         </div>
                     </div>
