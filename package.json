@@ -7,7 +7,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "bd": "npm run build && npm run dev"
+        "setup": "npm install && npm run build && npm run dev"
     },
     "dependencies": {
         "@number-flow/react": "^0.5.5",
