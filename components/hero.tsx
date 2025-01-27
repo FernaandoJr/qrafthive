@@ -66,7 +66,7 @@ interface HeroProps {
 const Hero = ({ content, preview }: HeroProps) => {
     return (
         <>
-            <div className="container relative my-[10rem] mx-auto">
+            <div className="container relative my-20 mx-auto">
                 <div className="flex flex-col gap-4 w-full lg:max-w-2xl z-10 relative">
                     <HeroContent {...content} />
                 </div>
