@@ -9,9 +9,9 @@ Oferecer uma plataforma completa para criação e personalização de QR Codes, 
 
 ---
 
-## Backlog do Projeto
+## Backlog do Projeto 
 
-| **Status** | **Categoria**           | **Tarefa**                                                                                                                                                                       | **Descrição**                                                                                                                                         |
+| **Status** | **Categoria**           | **Tarefa**                                                                                                                                                                        | **Descrição**                                                                                                                                         |
 |------------|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | ❌         | **Autenticação e Perfil** | Criar sistema de cadastro/login funcional com OAuth                                                                                                                             | Implementar autenticação segura e suporte a provedores como Google e GitHub.                                                                          |
 | ❌         |                          | Desenvolver dashboard para o perfil do usuário                                                                                                                                 | Visualizar QR Codes criados e gerenciar informações do perfil.                                                                                        |
