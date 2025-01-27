@@ -1,23 +1,23 @@
-import Examples from '../components/examples'
-import { StatisticsTrip } from '@/components/statistics-trip';
-import { Hero } from '../components/hero'
-
+import Examples from "../components/examples";
+import { Hero } from "../components/hero";
+import { StatisticsTrip } from "@/components/statistics-trip";
+import { Feature } from "@/components/ui/feature-with-advantages";
 
 export default function Home() {
+    const stats = [
+        { value: "1,000+", label: "Shared Links" },
+        { value: "10,000+", label: "QR Codes possibilities" },
+        { value: "350+", label: "Satisfied users" },
+    ]
 
-  const stats = [
-    { value: "1,000+", label: "Shared Links" },
-    { value: "10,000+", label: "QR Codes possibilities" },
-    { value: "350+", label: "Satisfied users" },
-  ];
-
-  return (
-    <>
-      <div className="overflow-x-hidden">
-        <Hero />
-        <StatisticsTrip stats={stats} />
-        <Examples />
-      </div>
-    </>
-  );
+    return (
+        <>
+            <div className="overflow-x-hidden">
+                <Hero />
+                <StatisticsTrip stats={stats} />
+                <Examples />
+                <Feature />
+            </div>
+        </>
+    )
 }

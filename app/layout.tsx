@@ -1,10 +1,10 @@
+import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
-import { ThemeProvider } from "@/components/ui/theme-provider"
-import { Analytics } from "@vercel/analytics/react"
-import { Footerdemo } from "@/components/ui/footer-section"
-import { Inter } from "next/font/google"
-import "./globals.css"
-import Navbar from "@/components/navbar"
+import { Inter } from "next/font/google";
+import { Footerdemo } from "@/components/ui/footer-section";
+import { Header1 } from "@/components/ui/header";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -22,7 +22,7 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <body className={`${inter.className} antialiased`}>
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-                    <Navbar />
+                    <Header1 />
                     {children}
                     <Analytics />
                 </ThemeProvider>
