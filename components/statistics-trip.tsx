@@ -9,7 +9,7 @@ interface StatisticsTripProps {
 
 export function StatisticsTrip({ stats }: StatisticsTripProps) {
     return (
-        <div className="class p-4 md:p-6 mt-6 text-white bg-zinc-300 dark:bg-zinc-900 w-[110%] overflow-hidden">
+        <div className="container class p-4 md:p-6 mx-auto mt-6 text-white overflow-hidden">
             <div className="flex flex-wrap justify-around items-center">
                 {stats.map((stat, index) => (
                     <div key={index} className="w-full md:w-1/2 lg:w-1/4 py-8">
