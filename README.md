@@ -5,7 +5,7 @@ Qrafthive é um aplicativo web que permite a criação de QR Codes personalizado
 ---
 
 ## Objetivo do Projeto
-Oferecer uma plataforma completa para criação e personalização de QR Codes, expandindo suas utilidades para diferentes cenários, como redes sociais, eventos, chamadas telefônicas e muito mais.
+Oferecer uma plataforma completa para criação e personalização de QR Codes, expandindo suas utilidades para diferentes cenários, como redes sociais, eventos, chamadas telefônicas e muito mais. 
 
 ---
 
