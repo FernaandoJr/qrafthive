@@ -7,7 +7,7 @@ export default function Home() {
 
     return (
         <>
-            <div className="overflow-x-hidden">
+            <div className="overflow-x-hidden ">
                 <Hero
                     content={{
                         title: "Unlock Infinite Possibilities with a custom",
