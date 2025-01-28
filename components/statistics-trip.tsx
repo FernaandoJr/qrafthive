@@ -1,31 +1,31 @@
-interface Stat {
-    value: string;
-    label: string;
-}
+import { NumberTicker } from "./ui/number-ticker";
 
-interface StatisticsTripProps {
-    stats: Stat[];
-}
 
-export function StatisticsTrip({ stats }: StatisticsTripProps) {
+export function StatisticsTrip() {
     return (
-        <div className="container class p-4 md:p-6 mx-auto mt-6 text-white overflow-hidden">
-            <div className="flex flex-wrap justify-around items-center">
-                {stats.map((stat, index) => (
-                    <div key={index} className="w-full md:w-1/2 lg:w-1/4 py-8">
-                        <div
-                            className={`px-12 ${index !== stats.length - 1
-                                ? 'lg:border-r md:border-r border-slate-900 dark:border-gray-200'
-                                : ''
-                                }`}
-                        >
-                            <h2 className="text-4xl text-slate-600 dark:text-slate-500 md:text-5xl font-semibold text-center">
-                                {stat.value}
-                            </h2>
-                            <p className="mb-2 text-gray-950 dark:text-zinc-300 text-center">{stat.label}</p>
-                        </div>
-                    </div>
-                ))}
+        <div className="container class p-4 md:p-6 mx-auto mt-6 text-white overflow-hidden w-full">
+            <div className="flex flex-wrap justify-around items-center gap-8">
+                <div className={`px-12 lg:border-r md:border-r border-slate-900 dark:border-gray-200`}>
+                    <h2 className="text-4xl text-slate-600 dark:text-slate-500 md:text-5xl font-semibold text-center">
+                        <NumberTicker className="text-slate-600 dark:text-slate-500" value={1000} decimalPlaces={0} delay={0.1} /> +
+                    </h2>
+                    <p className="mb-2 text-gray-950 dark:text-zinc-300 text-center">{'Shared Links'}</p>
+                </div>
+
+                <div className={`px-12 lg:border-r md:border-r border-slate-900 dark:border-gray-200`}>
+                    <h2 className="text-4xl text-slate-600 dark:text-slate-500 md:text-5xl font-semibold text-center">
+                        <NumberTicker className="text-slate-600 dark:text-slate-500" value={10000} decimalPlaces={0} delay={0.1} />+
+                    </h2>
+                    <p className="mb-2 text-gray-950 dark:text-zinc-300 text-center">{'QR Codes possibilities'}</p>
+                </div>
+
+                <div className={`px-12 lg:border-r md:border-r border-slate-900 dark:border-gray-200`}>
+                    <h2 className="text-4xl text-slate-600 dark:text-slate-500 md:text-5xl font-semibold text-center">
+                        <NumberTicker className="text-slate-600 dark:text-slate-500" value={350} decimalPlaces={0} delay={0.1} />+
+                    </h2>
+                    <p className="mb-2 text-gray-950 dark:text-zinc-300 text-center">{'Satisfied Users'}</p>
+                </div>
+
             </div>
         </div>
     );
