@@ -99,7 +99,7 @@ function Header1() {
                     <p className="font-semibold">QRaftHive</p>
                 </div>
                 <div className="flex justify-end w-full gap-4">
-                    <Button variant="outline">Sign in</Button>
+                    <Button onClick={() => { window.location.href = "/login" }} variant="outline">Sign in</Button>
                     <ModeToggle />
                 </div>
                 <div className="flex w-12 shrink lg:hidden items-end justify-end">
