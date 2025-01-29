@@ -62,23 +62,11 @@ export default function SignInFormDemo() {
             <form className="my-8" onSubmit={handleSubmit}>
                 <LabelInputContainer className="mb-4">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input
-                        id="email"
-                        placeholder="example@gmail.com"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+                    <Input id="email" placeholder="example@gmail.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 </LabelInputContainer>
                 <LabelInputContainer className="mb-4">
                     <Label htmlFor="password">Password</Label>
-                    <Input
-                        id="password"
-                        placeholder="••••••••"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                    <Input id="password" placeholder="••••••••" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </LabelInputContainer>
 
                 <button
@@ -86,7 +74,7 @@ export default function SignInFormDemo() {
                     type="submit"
                     disabled={loading}
                 >
-                    {loading ? "Logging in..." : "Log in &rarr"}
+                    {loading ? "Logging in..." : "Log in "}&rarr;
                     <BottomGradient />
                 </button>
 
