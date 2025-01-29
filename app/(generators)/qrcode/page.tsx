@@ -5,14 +5,6 @@ import { useState } from "react"
 import { AdvancedColorPicker } from "@/components/ui/advanced-color-picker"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuShortcut,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -20,6 +12,8 @@ import { Separator } from "@/components/ui/separator"
 import { Slider } from "@/components/ui/slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { TooltipInfo } from "@/components/ui/tooltip-info"
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
@@ -50,6 +44,7 @@ export default function Qrcode() {
     const [imageSize, setImageSize] = useState(300)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const svgRef = useRef<SVGSVGElement>(null)
+    const [fileName, setFileName] = useState("qrafthive-qrcode")
 
     function onCanvasButtonClick() {
         const node = canvasRef.current
@@ -59,7 +54,11 @@ export default function Qrcode() {
         // For canvas, we just extract the image data and send that directly.
         const dataURI = node.toDataURL("image/png")
 
-        downloadStringAsFile(dataURI, "qrcode-canvas.png")
+        if (fileName === "") {
+            setFileName("qrafthive-qrcode")
+        }
+
+        downloadStringAsFile(dataURI, fileName + ".png")
     }
 
     function onSVGButtonClick() {
@@ -77,7 +76,11 @@ export default function Qrcode() {
         const fileURI =
             "data:image/svg+xmlcharset=utf-8," + encodeURIComponent('<?xml version="1.0" standalone="no"?>' + serializer.serializeToString(node))
 
-        downloadStringAsFile(fileURI, "qrcode-svg.svg")
+        if (fileName === "") {
+            setFileName("qrafthive-qrcode")
+        }
+
+        downloadStringAsFile(fileURI, fileName + ".svg")
     }
 
     return (
@@ -95,9 +98,31 @@ export default function Qrcode() {
                     {/* Conteúdo de Informações do QRCode */}
                     <TabsContent value="information" className="w-full sm:w-[800px]">
                         <div className="input-div gap-5 w-full sm:w-3/4">
+                            {/* Size */}
+                            <div className="input-div">
+                                <Label htmlFor="qr-size" className="text-muted-foreground">
+                                    <TooltipInfo
+                                        label="Size"
+                                        tooltip="Size of the QR code in pixels. The downloaded QR code will be twice this size."
+                                    />
+                                </Label>
+                                <Input
+                                    id="qr-size"
+                                    type="number"
+                                    min={100}
+                                    className="w-full"
+                                    value={imageSize}
+                                    max={5000}
+                                    onChange={(event) => {
+                                        setImageSize(Number(event.target.value))
+                                    }}
+                                />
+                            </div>
                             {/* Error Level */}
                             <div className="input-div">
-                                <Label className="text-muted-foreground">Select the Error Level</Label>
+                                <Label className="text-muted-foreground">
+                                    <TooltipInfo label="Error level" tooltip="Eror correction level for the QR code. Low, Medium, Quartile, High." />
+                                </Label>
                                 <Select
                                     value={errorLevel}
                                     onValueChange={(value) => {
@@ -122,12 +147,11 @@ export default function Qrcode() {
                             {/* Margin Size */}
                             <div className="input-div">
                                 <Label htmlFor="margin-size" className="text-muted-foreground">
-                                    Change the margin size
+                                    <TooltipInfo label="Margin size" tooltip="Margin size for the QR code in pixels." />
                                 </Label>
                                 <Input
                                     type="number"
                                     id="margin-size"
-                                    placeholder="Margin size"
                                     max={150}
                                     min={0}
                                     value={marginSize}
@@ -146,12 +170,20 @@ export default function Qrcode() {
                                         setBoostLevel(newLevel)
                                     }}
                                 />
-                                <Label htmlFor="boost-level">Boost level</Label>
+                                <Label htmlFor="boost-level">
+                                    <TooltipInfo
+                                        label="Boost level"
+                                        tooltip="Boost level for the QR code. This determines the intensity of the QR code's visibility"
+                                    />
+                                </Label>
                             </div>
                             {/* Content */}
                             <div className="input-div">
                                 <Label htmlFor="value-textarea" className="text-muted-foreground">
-                                    Content
+                                    <TooltipInfo
+                                        label="Content"
+                                        tooltip="Content for the QR code. Text, a URL, or any other data you want to encode."
+                                    />
                                 </Label>
                                 <Textarea
                                     id="value-textarea"
@@ -170,7 +202,7 @@ export default function Qrcode() {
                         <div className="input-div gap-5 w-full sm:w-3/4">
                             <div className="input-div">
                                 <Label htmlFor="background-color" className="text-muted-foreground">
-                                    Background Color
+                                    <TooltipInfo label="Background Color" tooltip="Background color for the QR code." />
                                 </Label>
                                 <AdvancedColorPicker
                                     color={bgColor}
@@ -181,7 +213,7 @@ export default function Qrcode() {
                             </div>
                             <div className="input-div">
                                 <Label htmlFor="foreground-color" className="text-muted-foreground">
-                                    Foreground Color
+                                    <TooltipInfo label="Foreground Color" tooltip="Foreground color for the QR code." />
                                 </Label>
                                 <AdvancedColorPicker
                                     color={fgColor}
@@ -198,7 +230,7 @@ export default function Qrcode() {
                         <div className="input-div gap-5 w-full sm:w-3/4">
                             <div className="input-div">
                                 <Label htmlFor="picture" className="text-muted-foreground">
-                                    Custom image URL
+                                    <TooltipInfo label="Custom image URL" tooltip="URL for a custom image to be used in the QR code." />
                                 </Label>
                                 <Input id="picture" type="text" value={imageURL} onChange={(event) => setImageURL(event.target.value)} />
                             </div>
@@ -216,12 +248,17 @@ export default function Qrcode() {
                                         }
                                     }}
                                 />
-                                <Label htmlFor="image-scale">Maintain image scale</Label>
+                                <Label htmlFor="image-scale">
+                                    <TooltipInfo
+                                        label="Maintain image scale"
+                                        tooltip="Check this option to maintain the aspect ratio of the image when scaling."
+                                    />
+                                </Label>
                             </div>
                             <div className="flex flex-row gap-5">
                                 <div className="input-div">
                                     <Label htmlFor="image-width" className="text-muted-foreground">
-                                        Width
+                                        <TooltipInfo label="Width" tooltip="Width of the image in pixels." />
                                     </Label>
                                     <Input
                                         id="image-width"
@@ -241,7 +278,7 @@ export default function Qrcode() {
                                 </div>
                                 <div className="input-div">
                                     <Label htmlFor="image-height" className="text-muted-foreground">
-                                        Height
+                                        <TooltipInfo label="Height" tooltip="Height of the image in pixels." />
                                     </Label>
                                     <Input
                                         id="image-height"
@@ -276,14 +313,16 @@ export default function Qrcode() {
                                         }
                                     }}
                                 />
-                                <Label htmlFor="center-image">Center Image</Label>
+                                <Label htmlFor="center-image">
+                                    <TooltipInfo label="Center image" tooltip="Check this option to center the image within the QR code." />
+                                </Label>
                             </div>
                             {centerImage === false && (
                                 <div className="flex flex-row gap-5 w-full">
                                     <div className="input-div min-w-[190px]">
                                         <div className="flex justify-between items-center">
                                             <Label htmlFor="image-height" className="text-muted-foreground">
-                                                Image X
+                                                <TooltipInfo label="Image X" tooltip="Horizontal position of the image within the QR code." />
                                             </Label>
                                             <output className="text-sm font-medium tabular-nums text-right">{imageX}</output>
                                         </div>
@@ -297,7 +336,7 @@ export default function Qrcode() {
                                     <div className="input-div min-w-[190px]">
                                         <div className="flex justify-between items-center">
                                             <Label htmlFor="image-height" className="text-muted-foreground">
-                                                Image Y
+                                                <TooltipInfo label="Image Y" tooltip="Vertical position of the image within the QR code." />
                                             </Label>
                                             <output className="text-sm font-medium tabular-nums text-right">{imageY}</output>
                                         </div>
@@ -316,7 +355,9 @@ export default function Qrcode() {
                                     checked={excavateImage}
                                     onCheckedChange={(newValue: boolean) => setExcavateImage(newValue)}
                                 />
-                                <Label htmlFor="excavate-image">Excavate</Label>
+                                <Label htmlFor="excavate-image">
+                                    <TooltipInfo label="Excavate" tooltip="Check this option to enable excavation mode for the QR code." />
+                                </Label>
                             </div>
                         </div>
                     </TabsContent>
@@ -367,26 +408,36 @@ export default function Qrcode() {
                                 }}
                                 className="my-4 h-[250px] w-[250px] hidden"
                             />
-
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="default" className="mb-4">
-                                        Download
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="">
-                                    <DropdownMenuGroup>
-                                        <DropdownMenuItem className="cursor-pointer" onClick={onSVGButtonClick}>
-                                            SVG
-                                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="cursor-pointer" onClick={onCanvasButtonClick}>
-                                            PNG
-                                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                                        </DropdownMenuItem>
-                                    </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="default">Download</Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-80">
+                                    <div className="grid gap-4">
+                                        <div className="space-y-2">
+                                            <h4 className="font-medium leading-none">Set a file name</h4>
+                                            <p className="text-sm text-muted-foreground">Set a custom file name for the QR Code.</p>
+                                        </div>
+                                        <div className="grid gap-2">
+                                            <div className="grid grid-cols-3 items-center gap-4">
+                                                <Label htmlFor="width">Name</Label>
+                                                <Input
+                                                    id="filename"
+                                                    value={fileName}
+                                                    onChange={(event) => {
+                                                        setFileName(event.target.value)
+                                                    }}
+                                                    className="col-span-2 h-8"
+                                                />
+                                            </div>
+                                            <div className="flex flex-row items-center gap-2 mt-5 justify-center">
+                                                <Button onClick={onSVGButtonClick}>SVG</Button>
+                                                <Button onClick={onCanvasButtonClick}>PNG</Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
                         </div>
                     </div>
                 </div>
