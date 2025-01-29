@@ -26,6 +26,7 @@
         "@radix-ui/react-tooltip": "^1.1.7",
         "@tabler/icons-react": "^3.29.0",
         "@vercel/analytics": "^1.4.1",
+        "argon2": "^0.41.1",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "dotenv": "^16.4.7",
