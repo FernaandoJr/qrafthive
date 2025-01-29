@@ -74,7 +74,7 @@ export default function SignInFormDemo() {
                     type="submit"
                     disabled={loading}
                 >
-                    {loading ? "Logging in..." : "Log in "}&rarr;
+                    {loading ? "Logging in..." : "Log in "} &rarr;
                     <BottomGradient />
                 </button>
 
