@@ -37,8 +37,12 @@ export default function SignupFormDemo() {
             }
 
             setSuccess(true);
-        } catch (err: any) {
-            setError(err.message || "Something went wrong");
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message || "Something went wrong");
+            } else {
+                setError("Something went wrong");
+            }
         } finally {
             setLoading(false);
         }
@@ -46,7 +50,7 @@ export default function SignupFormDemo() {
 
     return (
         <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 mt-4 md:p-8 shadow-input bg-slate-100 dark:bg-black">
-            <h2 className="font-bold text-xl ">Welcome to QRaftHive</h2>
+            <h2 className="font-bold text-xl">Welcome to QRaftHive</h2>
             <p className="text-muted-foreground text-sm max-w-sm mt-2 ">
                 Already have an account?{" "}
                 <Link href={"/login"} className="text-blue-400">
