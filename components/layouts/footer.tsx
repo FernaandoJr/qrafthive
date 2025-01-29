@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
-function Footerdemo() {
+function Footer() {
     const quickLinks = [
         {
             name: "Home",
@@ -39,7 +39,11 @@ function Footerdemo() {
                         <p className="mb-6 text-muted-foreground">Join our newsletter for the latest updates and exclusive offers.</p>
                         <form className="relative">
                             <Input type="email" placeholder="Enter your email" className="pr-12 backdrop-blur-sm" />
-                            <Button type="submit" size="icon" className="absolute right-1 top-1 h-8 w-8 rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105">
+                            <Button
+                                type="submit"
+                                size="icon"
+                                className="absolute right-1 top-1 h-8 w-8 rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105"
+                            >
                                 <Send className="h-4 w-4" />
                                 <span className="sr-only">Subscribe</span>
                             </Button>
@@ -142,4 +146,4 @@ function Footerdemo() {
     )
 }
 
-export { Footerdemo }
+export { Footer }

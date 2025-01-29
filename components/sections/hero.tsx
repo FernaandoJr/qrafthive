@@ -1,8 +1,8 @@
-"use client";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+"use client"
+import Link from "next/link"
+import { motion } from "framer-motion"
+import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 const ease = [0.16, 1, 0.3, 1]
 
@@ -25,13 +25,28 @@ interface HeroContentProps {
 function HeroContent({ title, titleHighlight, description, primaryAction, secondaryAction }: HeroContentProps) {
     return (
         <div className="flex flex-col space-y-4">
-            <motion.h1 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease }}>
+            <motion.h1
+                className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease }}
+            >
                 {title} {titleHighlight && <span className="text-slate-600 dark:text-slate-500">{titleHighlight}</span>}
             </motion.h1>
-            <motion.p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.8, ease }}>
+            <motion.p
+                className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.8, ease }}
+            >
                 {description}
             </motion.p>
-            <motion.div className="flex flex-col sm:flex-row gap-4 pt-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8, ease }}>
+            <motion.div
+                className="flex flex-col sm:flex-row gap-4 pt-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.8, ease }}
+            >
                 {primaryAction && (
                     <Link href={primaryAction.href} className={cn(buttonVariants({ size: "lg" }), "gap-2 w-full sm:w-auto justify-center")}>
                         {primaryAction.icon}
@@ -39,7 +54,10 @@ function HeroContent({ title, titleHighlight, description, primaryAction, second
                     </Link>
                 )}
                 {secondaryAction && (
-                    <Link href={secondaryAction.href} className={cn(buttonVariants({ variant: "outline", size: "lg" }), "gap-2 w-full sm:w-auto justify-center")}>
+                    <Link
+                        href={secondaryAction.href}
+                        className={cn(buttonVariants({ variant: "outline", size: "lg" }), "gap-2 w-full sm:w-auto justify-center")}
+                    >
                         {secondaryAction.icon}
                         {secondaryAction.text}
                     </Link>
@@ -76,4 +94,4 @@ const Hero = ({ content, preview }: HeroProps) => {
     )
 }
 
-export { Hero };
+export { Hero }

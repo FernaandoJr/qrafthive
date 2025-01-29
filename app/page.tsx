@@ -1,10 +1,9 @@
-import Examples from "../components/examples"
-import { Hero } from "@/components/hero"
-import { StatisticsTrip } from "@/components/statistics-trip"
+import Examples from "../components/sections/examples"
+import { Hero } from "@/components/sections/hero"
+import { StatisticsTrip } from "@/components/sections/statistics-trip"
 import { Feature } from "@/components/ui/feature-with-advantages"
 
 export default function Home() {
-
     return (
         <>
             <div className="overflow-x-hidden ">

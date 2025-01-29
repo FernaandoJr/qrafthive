@@ -1,13 +1,21 @@
-"use client";
-import Link from "next/link";
+"use client"
+import Link from "next/link"
 import { motion } from "framer-motion"
-import { Menu, MoveRight, X } from "lucide-react";
-import { useState } from "react";
-import { ModeToggle } from "./theme-menu";
-import { Button } from "@/components/ui/button";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
+import { Menu, MoveRight, X } from "lucide-react"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { ModeToggle } from "@/components/ui/theme-menu"
 
-function Header1() {
+import {
+    NavigationMenu,
+    NavigationMenuContent,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu"
+
+function Header() {
     const navigationItems = [
         {
             title: "Home",
@@ -15,8 +23,8 @@ function Header1() {
             description: "",
         },
         {
-            title: "Services",
-            description: "Browse for all of our services.",
+            title: "Generators",
+            description: "Browse for all of our code generators.",
             items: [
                 {
                     title: "QR Code",
@@ -27,8 +35,8 @@ function Header1() {
                     href: "/barcode",
                 },
                 {
-                    title: "Dashboards",
-                    href: "/dashboards",
+                    title: "Explore all",
+                    href: "/explore",
                 },
             ],
         },
@@ -80,7 +88,11 @@ function Header1() {
                                                     </div>
                                                     <div className="flex flex-col text-sm h-full justify-end">
                                                         {item.items?.map((subItem) => (
-                                                            <NavigationMenuLink href={subItem.href} key={subItem.title} className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded">
+                                                            <NavigationMenuLink
+                                                                href={subItem.href}
+                                                                key={subItem.title}
+                                                                className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
+                                                            >
                                                                 <span>{subItem.title}</span>
                                                                 <MoveRight className="w-4 h-4 text-muted-foreground" />
                                                             </NavigationMenuLink>
@@ -99,7 +111,14 @@ function Header1() {
                     <p className="font-semibold">QRaftHive</p>
                 </div>
                 <div className="flex justify-end w-full gap-4">
-                    <Button onClick={() => { window.location.href = "/login" }} variant="outline">Sign in</Button>
+                    <Button
+                        onClick={() => {
+                            window.location.href = "/login"
+                        }}
+                        variant="outline"
+                    >
+                        Sign in
+                    </Button>
                     <ModeToggle />
                 </div>
                 <div className="flex w-12 shrink lg:hidden items-end justify-end">
@@ -117,17 +136,39 @@ function Header1() {
                                                 <MoveRight className="w-4 h-4 stroke-1 text-muted-foreground " />
                                             </Link>
                                         ) : (
-                                            <motion.div whileHover={{ scale: 1.05, zIndex: 1 }} className="w-fit">
+                                            <motion.div
+                                                whileHover={{
+                                                    scale: 1.05,
+                                                    zIndex: 1,
+                                                }}
+                                                className="w-fit"
+                                            >
                                                 <p className="text-lg">{item.title}</p>
                                             </motion.div>
                                         )}
                                         {item.items &&
                                             item.items.map((subItem) => (
                                                 <Link key={subItem.title} href={subItem.href} className="flex justify-between items-center">
-                                                    <motion.div whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.05, zIndex: 1 }}>
+                                                    <motion.div
+                                                        whileTap={{
+                                                            scale: 0.9,
+                                                        }}
+                                                        whileHover={{
+                                                            scale: 1.05,
+                                                            zIndex: 1,
+                                                        }}
+                                                    >
                                                         <span className="text-muted-foreground">{subItem.title}</span>
                                                     </motion.div>
-                                                    <motion.div whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.1, zIndex: 1 }}>
+                                                    <motion.div
+                                                        whileTap={{
+                                                            scale: 0.9,
+                                                        }}
+                                                        whileHover={{
+                                                            scale: 1.1,
+                                                            zIndex: 1,
+                                                        }}
+                                                    >
                                                         <MoveRight className="w-4 h-4 stroke-1" />
                                                     </motion.div>
                                                 </Link>
@@ -143,4 +184,4 @@ function Header1() {
     )
 }
 
-export { Header1 }
+export { Header }

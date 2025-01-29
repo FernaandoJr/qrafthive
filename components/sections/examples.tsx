@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/image"
 
 export default function Examples() {
     return (
@@ -9,9 +9,13 @@ export default function Examples() {
                         See the Power of Custom
                         <br className="hidden lg:inline-block" /> QR Codes in Action
                     </h1>
-                    <p className="mb-8 leading-relaxed ">Personalize every detail to make your QR codes stand out. Perfect for your business, events, or personal touch.</p>
+                    <p className="mb-8 leading-relaxed ">
+                        Personalize every detail to make your QR codes stand out. Perfect for your business, events, or personal touch.
+                    </p>
                     <div className="flex justify-center lg:justify-start">
-                        <button className="inline-flex text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Customize Yours Now</button>
+                        <button className="inline-flex text-white bg-slate-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+                            Customize Yours Now
+                        </button>
                     </div>
                 </div>
 
@@ -27,5 +31,4 @@ export default function Examples() {
             </div>
         </section>
     )
-
 }

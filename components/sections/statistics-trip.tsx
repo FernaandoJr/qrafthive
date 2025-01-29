@@ -1,5 +1,4 @@
-import { NumberTicker } from "./ui/number-ticker";
-
+import { NumberTicker } from "../ui/number-ticker"
 
 export function StatisticsTrip() {
     return (
@@ -9,24 +8,23 @@ export function StatisticsTrip() {
                     <h2 className="text-4xl text-slate-600 dark:text-slate-500 md:text-5xl font-semibold text-center">
                         <NumberTicker className="text-slate-600 dark:text-slate-500" value={1000} decimalPlaces={0} delay={0.1} /> +
                     </h2>
-                    <p className="mb-2 text-gray-950 dark:text-zinc-300 text-center">{'Shared Links'}</p>
+                    <p className="mb-2 text-gray-950 dark:text-zinc-300 text-center">{"Shared Links"}</p>
                 </div>
 
                 <div className={`px-12 lg:border-r md:border-r border-slate-900 dark:border-gray-200`}>
                     <h2 className="text-4xl text-slate-600 dark:text-slate-500 md:text-5xl font-semibold text-center">
                         <NumberTicker className="text-slate-600 dark:text-slate-500" value={10000} decimalPlaces={0} delay={0.1} />+
                     </h2>
-                    <p className="mb-2 text-gray-950 dark:text-zinc-300 text-center">{'QR Codes possibilities'}</p>
+                    <p className="mb-2 text-gray-950 dark:text-zinc-300 text-center">{"QR Codes possibilities"}</p>
                 </div>
 
                 <div className={`px-12 lg:border-r md:border-r border-slate-900 dark:border-gray-200`}>
                     <h2 className="text-4xl text-slate-600 dark:text-slate-500 md:text-5xl font-semibold text-center">
                         <NumberTicker className="text-slate-600 dark:text-slate-500" value={350} decimalPlaces={0} delay={0.1} />+
                     </h2>
-                    <p className="mb-2 text-gray-950 dark:text-zinc-300 text-center">{'Satisfied Users'}</p>
+                    <p className="mb-2 text-gray-950 dark:text-zinc-300 text-center">{"Satisfied Users"}</p>
                 </div>
-
             </div>
         </div>
-    );
+    )
 }

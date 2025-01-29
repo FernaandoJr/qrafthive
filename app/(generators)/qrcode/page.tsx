@@ -1,18 +1,25 @@
-"use client";
-import React, { useRef } from "react";
-import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
-import { useState } from "react";
-import { AdvancedColorPicker } from "@/components/ui/advanced-color-picker";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Slider } from "@/components/ui/slider";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
+"use client"
+import React, { useRef } from "react"
+import { QRCodeCanvas, QRCodeSVG } from "qrcode.react"
+import { useState } from "react"
+import { AdvancedColorPicker } from "@/components/ui/advanced-color-picker"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuShortcut,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Separator } from "@/components/ui/separator"
+import { Slider } from "@/components/ui/slider"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
@@ -67,7 +74,8 @@ export default function Qrcode() {
         // encode all of that to be safe to be encoded as a URI (which we
         // need to stuff into href).
         const serializer = new XMLSerializer()
-        const fileURI = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<?xml version="1.0" standalone="no"?>' + serializer.serializeToString(node))
+        const fileURI =
+            "data:image/svg+xmlcharset=utf-8," + encodeURIComponent('<?xml version="1.0" standalone="no"?>' + serializer.serializeToString(node))
 
         downloadStringAsFile(fileURI, "qrcode-svg.svg")
     }
@@ -279,7 +287,12 @@ export default function Qrcode() {
                                             </Label>
                                             <output className="text-sm font-medium tabular-nums text-right">{imageX}</output>
                                         </div>
-                                        <Slider value={imageX ? [imageX] : [0]} onValueChange={(value) => setImageX(value[0])} aria-label="Slider with output" max={imageSize - imageWidth} />
+                                        <Slider
+                                            value={imageX ? [imageX] : [0]}
+                                            onValueChange={(value) => setImageX(value[0])}
+                                            aria-label="Slider with output"
+                                            max={imageSize - imageWidth}
+                                        />
                                     </div>
                                     <div className="input-div min-w-[190px]">
                                         <div className="flex justify-between items-center">
@@ -288,12 +301,21 @@ export default function Qrcode() {
                                             </Label>
                                             <output className="text-sm font-medium tabular-nums text-right">{imageY}</output>
                                         </div>
-                                        <Slider value={imageY ? [imageY] : [0]} onValueChange={(value) => setImageY(value[0])} aria-label="Slider with output" max={imageSize - imageHeight} />
+                                        <Slider
+                                            value={imageY ? [imageY] : [0]}
+                                            onValueChange={(value) => setImageY(value[0])}
+                                            aria-label="Slider with output"
+                                            max={imageSize - imageHeight}
+                                        />
                                     </div>
                                 </div>
                             )}
                             <div className="flex flex-row gap-2 items-center">
-                                <Checkbox id="excavate-image" checked={excavateImage} onCheckedChange={(newValue: boolean) => setExcavateImage(newValue)} />
+                                <Checkbox
+                                    id="excavate-image"
+                                    checked={excavateImage}
+                                    onCheckedChange={(newValue: boolean) => setExcavateImage(newValue)}
+                                />
                                 <Label htmlFor="excavate-image">Excavate</Label>
                             </div>
                         </div>
@@ -305,9 +327,46 @@ export default function Qrcode() {
                         <div className="flex flex-col items-center">
                             <Separator orientation="horizontal" className="mx-8 mt-8 mb-4 block sm:hidden md:hidden lg:hidden" />
 
-                            <QRCodeSVG ref={svgRef} value={content} size={imageSize} marginSize={marginSize} fgColor={fgColor} bgColor={bgColor} level={errorLevel} boostLevel={boostLevel} imageSettings={{ src: imageURL, excavate: excavateImage, height: imageHeight, width: imageWidth, x: imageX, y: imageY }} className="my-4 h-[250px] w-[250px]" />
+                            <QRCodeSVG
+                                ref={svgRef}
+                                value={content}
+                                size={imageSize}
+                                marginSize={marginSize}
+                                fgColor={fgColor}
+                                bgColor={bgColor}
+                                level={errorLevel}
+                                boostLevel={boostLevel}
+                                imageSettings={{
+                                    src: imageURL,
+                                    excavate: excavateImage,
+                                    height: imageHeight,
+                                    width: imageWidth,
+                                    x: imageX,
+                                    y: imageY,
+                                }}
+                                className="my-4 h-[250px] w-[250px]"
+                            />
 
-                            <QRCodeCanvas ref={canvasRef} value={content} size={imageSize} marginSize={marginSize} fgColor={fgColor} bgColor={bgColor} level={errorLevel} boostLevel={boostLevel} imageSettings={{ src: imageURL, excavate: excavateImage, height: imageHeight, width: imageWidth, x: imageX, y: imageY, crossOrigin: "anonymous" }} className="my-4 h-[250px] w-[250px] hidden" />
+                            <QRCodeCanvas
+                                ref={canvasRef}
+                                value={content}
+                                size={imageSize}
+                                marginSize={marginSize}
+                                fgColor={fgColor}
+                                bgColor={bgColor}
+                                level={errorLevel}
+                                boostLevel={boostLevel}
+                                imageSettings={{
+                                    src: imageURL,
+                                    excavate: excavateImage,
+                                    height: imageHeight,
+                                    width: imageWidth,
+                                    x: imageX,
+                                    y: imageY,
+                                    crossOrigin: "anonymous",
+                                }}
+                                className="my-4 h-[250px] w-[250px] hidden"
+                            />
 
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
