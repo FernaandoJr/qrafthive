@@ -2,7 +2,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Menu, MoveRight, X } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/ui/theme-menu"
 
@@ -61,6 +61,29 @@ function Header() {
     ]
 
     const [isOpen, setOpen] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+    useEffect(() => {
+        // Verifica se o token existe no localStorage (ou cookies)
+        const token = localStorage.getItem("token") // ou pode ser cookies, conforme sua implementação
+        if (token) {
+            setIsLoggedIn(true)
+        } else {
+            setIsLoggedIn(false)
+        }
+    }, [])
+
+    const handleAuthAction = () => {
+        if (isLoggedIn) {
+            localStorage.removeItem("token")
+            setIsLoggedIn(false)
+            window.location.href = "/"
+        } else {
+            window.location.href = "/login"
+        }
+    }
+
+
     return (
         <header className="w-full z-40 sticky top-0 left-0 bg-background">
             <div className="container relative mx-auto min-h-20 flex gap-4 flex-row lg:grid lg:grid-cols-3 items-center ">
@@ -112,12 +135,10 @@ function Header() {
                 </div>
                 <div className="flex justify-end w-full gap-4">
                     <Button
-                        onClick={() => {
-                            window.location.href = "/login"
-                        }}
+                        onClick={handleAuthAction}
                         variant="outline"
                     >
-                        Sign in
+                        {isLoggedIn ? "Logout" : "Sign in"}
                     </Button>
                     <ModeToggle />
                 </div>
