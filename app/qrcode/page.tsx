@@ -1,18 +1,25 @@
 "use client";
-import { QRCodeSVG } from "qrcode.react";
-import { useState } from "react";
-import { AdvancedColorPicker } from "@/components/ui/advanced-color-picker";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Slider } from "@/components/ui/slider";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
+import React, { useRef } from "react"
+import { QRCodeCanvas, QRCodeSVG } from "qrcode.react"
+import { useState } from "react"
+import { AdvancedColorPicker } from "@/components/ui/advanced-color-picker"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Separator } from "@/components/ui/separator"
+import { Slider } from "@/components/ui/slider"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
+function downloadStringAsFile(data: string, filename: string) {
+    const a = document.createElement("a")
+    a.download = filename
+    a.href = data
+    a.click()
+}
 
 type ErrorLevel = "L" | "M" | "Q" | "H"
 
@@ -32,6 +39,36 @@ export default function Qrcode() {
     const [errorLevel, setErrorLevel] = useState<ErrorLevel>("M")
     const [imageURL, setImageURL] = useState<string>("https://avatars.githubusercontent.com/u/77449521?s=200&v=4")
     const [imageSize, setImageSize] = useState(300)
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+    const svgRef = useRef<SVGSVGElement>(null)
+
+    function onCanvasButtonClick() {
+        const node = canvasRef.current
+        if (node == null) {
+            return
+        }
+        // For canvas, we just extract the image data and send that directly.
+        const dataURI = node.toDataURL("image/png")
+
+        downloadStringAsFile(dataURI, "qrcode-canvas.png")
+    }
+
+    function onSVGButtonClick() {
+        const node = svgRef.current
+        if (node == null) {
+            return
+        }
+
+        // For SVG, we need to get the markup and turn it into XML.
+        // Using XMLSerializer is the easiest way to ensure the markup
+        // contains the xmlns. Then we make sure it gets the right DOCTYPE,
+        // encode all of that to be safe to be encoded as a URI (which we
+        // need to stuff into href).
+        const serializer = new XMLSerializer()
+        const fileURI = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<?xml version="1.0" standalone="no"?>' + serializer.serializeToString(node))
+
+        downloadStringAsFile(fileURI, "qrcode-svg.svg")
+    }
 
     return (
         <div className="rounded-lg max-w-[1200px] mx-auto px-4 py-12 md:px-6 lg:px-8 flex flex-row justify-center md:max-w-[800px]">
@@ -265,8 +302,30 @@ export default function Qrcode() {
                         <Separator orientation="vertical" className="mx-10 hidden sm:block lg:block" />
                         <div className="flex flex-col items-center">
                             <Separator orientation="horizontal" className="mx-8 mt-8 mb-4 block sm:hidden md:hidden lg:hidden" />
-                            <QRCodeSVG value={content} size={imageSize} marginSize={marginSize} fgColor={fgColor} bgColor={bgColor} level={errorLevel} boostLevel={boostLevel} imageSettings={{ src: imageURL, excavate: excavateImage, height: imageHeight, width: imageWidth, x: imageX, y: imageY }} className="my-4 h-[250px] w-[250px]" />
-                            <Button className="mb-4">Download</Button>
+
+                            <QRCodeSVG ref={svgRef} value={content} size={imageSize} marginSize={marginSize} fgColor={fgColor} bgColor={bgColor} level={errorLevel} boostLevel={boostLevel} imageSettings={{ src: imageURL, excavate: excavateImage, height: imageHeight, width: imageWidth, x: imageX, y: imageY }} className="my-4 h-[250px] w-[250px]" />
+
+                            <QRCodeCanvas ref={canvasRef} value={content} size={imageSize} marginSize={marginSize} fgColor={fgColor} bgColor={bgColor} level={errorLevel} boostLevel={boostLevel} imageSettings={{ src: imageURL, excavate: excavateImage, height: imageHeight, width: imageWidth, x: imageX, y: imageY, crossOrigin: "anonymous" }} className="my-4 h-[250px] w-[250px] hidden" />
+
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="default" className="mb-4">
+                                        Download
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="">
+                                    <DropdownMenuGroup>
+                                        <DropdownMenuItem className="cursor-pointer" onClick={onSVGButtonClick}>
+                                            SVG
+                                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem className="cursor-pointer" onClick={onCanvasButtonClick}>
+                                            PNG
+                                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     </div>
                 </div>
