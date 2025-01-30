@@ -50,7 +50,7 @@ export default function SignInFormDemo() {
     }
 
     return (
-        <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 mt-4 md:p-8 shadow-input bg-white dark:bg-black">
+        <div className="max-w-md w-full mx-auto rounded-2xl md:rounded-2xl p-4 mt-4 md:p-8 shadow-input bg-slate-300 dark:bg-black">
             <h2 className="font-bold text-xl">Welcome Back</h2>
             <p className="text-muted-foreground text-sm max-w-sm mt-2 ">
                 Don&apos;t have an account?{" "}

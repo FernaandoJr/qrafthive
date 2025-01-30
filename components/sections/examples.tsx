@@ -3,7 +3,7 @@ import Image from "next/image"
 export default function Examples() {
     return (
         <section className="rounded-md flex justify-center mx-auto text-gray-600 body-font">
-            <div className="container max-w-screen-lg py-4 flex items-center justify-between flex-wrap lg:flex-nowrap ">
+            <div className="container max-w-screen-lg py-4 flex items-center justify-between flex-wrap lg:flex-nowrap md:align-center sm:justify-center sm:align-center">
                 <div className="lg:w-1/2 flex flex-col lg:items-start items-center justify-center text-center lg:text-left md:mx-6 max-w-lg">
                     <h1 className="title-font sm:text-4xl text-3xl mb-4 font-bold text-slate-600 dark:text-gray-200">
                         See the Power of Custom
