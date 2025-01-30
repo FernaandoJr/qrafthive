@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { TooltipInfo } from "@/components/ui/tooltip-info"
+import { motion } from "framer-motion"
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
@@ -163,13 +164,15 @@ export default function Qrcode() {
                             </div>
                             {/* Boost Level */}
                             <div className="flex flex-row gap-2 items-center">
-                                <Checkbox
-                                    id="boost-level"
-                                    checked={boostLevel}
-                                    onCheckedChange={(newLevel: boolean) => {
-                                        setBoostLevel(newLevel)
-                                    }}
-                                />
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.99 }} className="flex">
+                                    <Checkbox
+                                        id="boost-level"
+                                        checked={boostLevel}
+                                        onCheckedChange={(newLevel: boolean) => {
+                                            setBoostLevel(newLevel)
+                                        }}
+                                    />
+                                </motion.div>
                                 <Label htmlFor="boost-level">
                                     <TooltipInfo
                                         label="Boost level"
@@ -238,16 +241,18 @@ export default function Qrcode() {
                                 // escala da imagem
                             }
                             <div className="flex flex-row gap-2 items-center">
-                                <Checkbox
-                                    id="image-scale"
-                                    checked={imageScale}
-                                    onCheckedChange={(newValue: boolean) => {
-                                        setImageScale(newValue)
-                                        if (newValue) {
-                                            setImageHeight(imageWidth)
-                                        }
-                                    }}
-                                />
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.99 }} className="flex">
+                                    <Checkbox
+                                        id="image-scale"
+                                        checked={imageScale}
+                                        onCheckedChange={(newValue: boolean) => {
+                                            setImageScale(newValue)
+                                            if (newValue) {
+                                                setImageHeight(imageWidth)
+                                            }
+                                        }}
+                                    />
+                                </motion.div>
                                 <Label htmlFor="image-scale">
                                     <TooltipInfo
                                         label="Maintain image scale"
@@ -299,20 +304,22 @@ export default function Qrcode() {
                             </div>
 
                             <div className="flex flex-row gap-2 items-center">
-                                <Checkbox
-                                    id="center-image"
-                                    checked={centerImage}
-                                    onCheckedChange={(NewValue: boolean) => {
-                                        setCenterImage(NewValue)
-                                        if (NewValue) {
-                                            setImageX(undefined)
-                                            setImageY(undefined)
-                                        } else {
-                                            setImageX(0)
-                                            setImageY(0)
-                                        }
-                                    }}
-                                />
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.99 }} className="flex">
+                                    <Checkbox
+                                        id="center-image"
+                                        checked={centerImage}
+                                        onCheckedChange={(NewValue: boolean) => {
+                                            setCenterImage(NewValue)
+                                            if (NewValue) {
+                                                setImageX(undefined)
+                                                setImageY(undefined)
+                                            } else {
+                                                setImageX(0)
+                                                setImageY(0)
+                                            }
+                                        }}
+                                    />
+                                </motion.div>
                                 <Label htmlFor="center-image">
                                     <TooltipInfo label="Center image" tooltip="Check this option to center the image within the QR code." />
                                 </Label>
@@ -350,11 +357,13 @@ export default function Qrcode() {
                                 </div>
                             )}
                             <div className="flex flex-row gap-2 items-center">
-                                <Checkbox
-                                    id="excavate-image"
-                                    checked={excavateImage}
-                                    onCheckedChange={(newValue: boolean) => setExcavateImage(newValue)}
-                                />
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.99 }} className="flex">
+                                    <Checkbox
+                                        id="excavate-image"
+                                        checked={excavateImage}
+                                        onCheckedChange={(newValue: boolean) => setExcavateImage(newValue)}
+                                    />
+                                </motion.div>
                                 <Label htmlFor="excavate-image">
                                     <TooltipInfo label="Excavate" tooltip="Check this option to enable excavation mode for the QR code." />
                                 </Label>
@@ -410,7 +419,9 @@ export default function Qrcode() {
                             />
                             <Popover>
                                 <PopoverTrigger asChild>
-                                    <Button variant="default">Download</Button>
+                                    <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.99 }} className="">
+                                        <Button variant="default">Download</Button>
+                                    </motion.div>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-80">
                                     <div className="grid gap-4">
@@ -431,8 +442,12 @@ export default function Qrcode() {
                                                 />
                                             </div>
                                             <div className="flex flex-row items-center gap-2 mt-5 justify-center">
-                                                <Button onClick={onSVGButtonClick}>SVG</Button>
-                                                <Button onClick={onCanvasButtonClick}>PNG</Button>
+                                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.99 }} className="">
+                                                    <Button onClick={onSVGButtonClick}>SVG</Button>
+                                                </motion.div>
+                                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.99 }} className="">
+                                                    <Button onClick={onCanvasButtonClick}>PNG</Button>
+                                                </motion.div>
                                             </div>
                                         </div>
                                     </div>
