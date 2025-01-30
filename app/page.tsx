@@ -6,7 +6,7 @@ import { Feature } from "@/components/ui/feature-with-advantages"
 export default function Home() {
     return (
         <>
-            <div className="overflow-x-hidden ">
+            <div className="overflow-x-hidden container flex flex-col align-center mx-auto">
                 <Hero
                     content={{
                         title: "Unlock Infinite Possibilities with a custom",
