@@ -5,52 +5,50 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
+import { toast } from "sonner"
+import { TriangleAlert } from "lucide-react"
 
 export default function SignInFormDemo() {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
-    const [loading, setLoading] = useState<boolean>(false)
+    const [pending, setPending] = useState(false);
+    // const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        setLoading(true)
-        setError(null)
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setPending(false)
 
-        try {
-            const response = await fetch("/api/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-            })
+        const res = await signIn("credentials", {
+            redirect: false,
+            email,
+            password
+        })
 
-            const data = await response.json()
-
-            if (!response.ok) {
-                throw new Error(data.message || "Failed to login")
-            }
-
-            // Armazenando o token JWT
-            localStorage.setItem("token", data.token)
-
+        if (res?.ok) {
             router.push("/")
-
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                setError(err.message || "Something went wrong")
-            } else {
-                setError("Something went wrong")
-            }
-        } finally {
-            setLoading(false)
+            toast.success("login successful")
+        } else if (res?.status == 401) {
+            setError("Invalid Credentials");
+            setPending(false);
+        } else {
+            setError("Something went wrong");
+            setPending(false);
         }
+
     }
+
 
     return (
         <div className="max-w-md w-full mx-auto rounded-2xl md:rounded-2xl p-4 mt-4 md:p-8 shadow-input bg-slate-300 dark:bg-black">
+            {!!error && (
+                <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+                    <TriangleAlert />
+                    <p>{error}</p>
+                </div>
+            )}
             <h2 className="font-bold text-xl">Welcome Back</h2>
             <p className="text-muted-foreground text-sm max-w-sm mt-2 ">
                 Don&apos;t have an account?{" "}
@@ -62,23 +60,21 @@ export default function SignInFormDemo() {
             <form className="my-8" onSubmit={handleSubmit}>
                 <LabelInputContainer className="mb-4">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" placeholder="example@gmail.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <Input id="email" placeholder="example@gmail.com" type="email" disabled={pending} value={email} onChange={(e) => setEmail(e.target.value)} required />
                 </LabelInputContainer>
                 <LabelInputContainer className="mb-4">
                     <Label htmlFor="password">Password</Label>
-                    <Input id="password" placeholder="••••••••" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <Input id="password" placeholder="••••••••" type="password" disabled={pending} value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </LabelInputContainer>
 
                 <button
                     className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
                     type="submit"
-                    disabled={loading}
+                    disabled={pending}
                 >
-                    {loading ? "Logging in..." : "Log in "} &rarr;
+                    {pending ? "Logging in..." : "Log in "} &rarr;
                     <BottomGradient />
                 </button>
-
-                {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
 
                 <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
 

@@ -9,7 +9,7 @@ interface User extends Document {
     updatedAt?: Date
 }
 
-const UserSchema: Schema<User> = new Schema(
+const UserSchema: Schema<User> = new mongoose.Schema(
     {
         fullName: { type: String, required: true },
         email: { type: String, required: true, unique: true },
@@ -33,13 +33,12 @@ import { NextResponse } from 'next/server'
 import { verifyToken } from '../lib/verifyToken'
 
 export async function handler(req: Request) {
-    // Verifica o token
+
     const tokenVerificationResponse = await verifyToken(req);
     if (tokenVerificationResponse) {
-        return tokenVerificationResponse; // Se o token for inválido, retorna o erro
+        return tokenVerificationResponse;
     }
 
-    // Se o token for válido, prossiga com a lógica da rota
     return NextResponse.json({ message: 'Usuário autenticado com sucesso!' });
 }
 
