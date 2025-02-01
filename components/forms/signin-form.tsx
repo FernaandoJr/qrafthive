@@ -21,7 +21,6 @@ export default function SigninForm() {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [pending, setPending] = useState(false)
-    // const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
 
@@ -45,6 +44,11 @@ export default function SigninForm() {
             setError("Something went wrong")
             setPending(false)
         }
+    }
+
+    const handleProvider = async (event: React.MouseEvent<HTMLButtonElement>, value: "github" | "google") => {
+        event.preventDefault()
+        signIn(value, { callbackUrl: "/" })
     }
 
     return (
@@ -117,7 +121,10 @@ export default function SigninForm() {
                             <span className="text-xs text-muted-foreground">Or</span>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Button className="bg-[#DB4437] text-white after:flex-1 hover:bg-[#DB4437]/90">
+                            <Button
+                                onClick={(e) => handleProvider(e, "google")}
+                                className="bg-[#DB4437] text-white after:flex-1 hover:bg-[#DB4437]/90"
+                            >
                                 <span className="pointer-events-none me-2 flex-1">
                                     <RiGoogleFill className="opacity-60" size={16} aria-hidden="true" />
                                 </span>
