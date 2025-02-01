@@ -11,10 +11,6 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "Please fill all fields" }, { status: 400 })
     }
 
-    console.log("fullName: ", fullName)
-    console.log("email: ", email)
-    console.log("password: ", password)
-
     const newUser = new User({ fullName, email, password })
     await newUser.save()
     return NextResponse.json(newUser, { status: 201 })

@@ -36,7 +36,7 @@ export default function SigninForm() {
 
         if (res?.ok) {
             router.push("/")
-            toast.success("login successful")
+            toast.success("Login successful")
         } else if (res?.status == 401) {
             setError("Invalid Credentials")
             setPending(false)

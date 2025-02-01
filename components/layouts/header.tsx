@@ -5,7 +5,6 @@ import { Menu, MoveRight, X } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/ui/theme-menu"
-
 import {
     NavigationMenu,
     NavigationMenuContent,
