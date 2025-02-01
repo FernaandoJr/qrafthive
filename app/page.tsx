@@ -5,6 +5,7 @@ import { Hero } from "@/components/sections/hero"
 import { StatisticsSection } from "@/components/sections/statistics-trip"
 import { Feature } from "@/components/ui/feature-with-advantages"
 import { SessionProvider } from "next-auth/react"
+
 export default function Home() {
     return (
         <SessionProvider>
