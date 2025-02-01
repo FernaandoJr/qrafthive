@@ -39,7 +39,7 @@ export const UserButton = () => {
                         </Avatar>
                         <p className="scroll-m-20 text-xl font-semibold tracking-tight">Hi, {session.user?.name}!</p>
                         <Button className="w-full rounded-full h-fit border-border border" variant="ghost">
-                            Manage Account
+                            <Link href="/dashboard">Manage Account</Link>
                         </Button>
                         <Button onClick={handleSignOut} className="h-fit w-full rounded-full" variant="destructive">
                             Sign out
