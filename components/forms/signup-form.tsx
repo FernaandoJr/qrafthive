@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { useId, useMemo } from "react"
 import { Spinner } from "../ui/spinner"
+import { signIn } from "next-auth/react"
+import { RiGoogleFill } from "@remixicon/react"
 
 export default function SignupForm() {
     const [isVisible, setIsVisible] = useState<boolean>(false)
@@ -55,6 +57,11 @@ export default function SignupForm() {
     }
 
     const id = useId()
+
+    const handleProvider = async (event: React.MouseEvent<HTMLButtonElement>, value: "github" | "google") => {
+        event.preventDefault()
+        signIn(value, { callbackUrl: "/" })
+    }
 
     const checkStrength = (pass: string) => {
         const requirements = [
@@ -228,6 +235,12 @@ export default function SignupForm() {
                         <Button type="submit" variant="default" className="w-full" disabled={pending}>
                             {pending ? "Signing up..." : "Sign up"}
                             {pending ? <Spinner className="animate-spin h-5 w-5 text-white" /> : null}
+                        </Button>
+                        <Button onClick={(e) => handleProvider(e, "google")} className="bg-[#DB4437] text-white after:flex-1 hover:bg-[#DB4437]/90">
+                            <span className="pointer-events-none me-2 flex-1">
+                                <RiGoogleFill className="opacity-60" size={16} aria-hidden="true" />
+                            </span>
+                            Login with Google
                         </Button>
                     </div>
                     <div className="">

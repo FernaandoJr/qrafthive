@@ -1,6 +1,8 @@
 
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import GithubProvider from "next-auth/providers/github";
 import User from "@/models/User";
 import connectToDatabase from "@/lib/mongoose";
 import argon2 from "argon2";
@@ -10,6 +12,14 @@ const handler = NextAuth({
         strategy: "jwt",
     },
     providers: [
+        GithubProvider({
+            clientId: process.env.GITHUB_ID!,
+            clientSecret: process.env.GITHUB_SECRET!
+        }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+        }),
         CredentialsProvider({
             name: "Credentials",
             credentials: {
@@ -45,6 +55,19 @@ const handler = NextAuth({
                 token.name = user.name;
             }
             return token;
+        },
+        async signIn({ account, profile }) {
+            if (account?.provider === "google" || account?.provider === "github") {
+                await connectToDatabase();
+                const existinUser = await User.findOne({ email: profile?.email });
+                if (!existinUser) {
+                    await User.create({
+                        name: profile?.name,
+                        email: profile?.email,
+                    })
+                }
+            }
+            return true // Do different verification for other providers that don't have `email_verified`
         },
         async session({ session, token }) {
             if (token) {
