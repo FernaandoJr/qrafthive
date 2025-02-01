@@ -11,6 +11,7 @@ import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
 import { toast } from "sonner"
+import { Spinner } from "../ui/spinner"
 
 export default function SigninForm() {
     const [isVisible, setIsVisible] = useState<boolean>(false)
@@ -110,6 +111,7 @@ export default function SigninForm() {
                     <div className="flex flex-col gap-4">
                         <Button type="submit" variant="default" className="w-full" disabled={pending}>
                             {pending ? "Signing in..." : "Sign in"}
+                            {pending ? <Spinner className="h-5 w-5 ml-2 text-white dark:text-black" /> : null}
                         </Button>
                         <div className="flex items-center gap-3 before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
                             <span className="text-xs text-muted-foreground">Or</span>

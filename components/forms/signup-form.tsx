@@ -9,6 +9,7 @@ import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { useId, useMemo } from "react"
+import { Spinner } from "../ui/spinner"
 
 export default function SignupForm() {
     const [isVisible, setIsVisible] = useState<boolean>(false)
@@ -226,6 +227,7 @@ export default function SignupForm() {
                     <div className="flex flex-col gap-4">
                         <Button type="submit" variant="default" className="w-full" disabled={pending}>
                             {pending ? "Signing up..." : "Sign up"}
+                            {pending ? <Spinner className="animate-spin h-5 w-5 text-white" /> : null}
                         </Button>
                     </div>
                     <div className="">
