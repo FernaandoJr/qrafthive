@@ -1,8 +1,7 @@
 "use client"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Menu, MoveRight, X } from "lucide-react"
-import { useState } from "react"
+import { Menu, MoveRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/ui/theme-menu"
 import {
@@ -13,6 +12,7 @@ import {
     NavigationMenuList,
     NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { UserButton } from "../user-button"
 import { SessionProvider } from "next-auth/react"
 
@@ -61,12 +61,10 @@ function Header() {
         },
     ]
 
-    const [isOpen, setOpen] = useState(false)
-
     return (
         <SessionProvider>
             <header className="w-full z-40 sticky top-0 left-0 bg-background">
-                <div className="container relative mx-auto min-h-20 flex gap-4 flex-row lg:grid lg:grid-cols-3 items-center ">
+                <div className="container relative mx-auto min-h-20 flex gap-4 flex-row lg:grid lg:grid-cols-3 items-center">
                     <div className="justify-start items-center gap-4 lg:flex hidden flex-row">
                         <NavigationMenu className="flex justify-start items-start">
                             <NavigationMenuList className="flex justify-start gap-4 flex-row">
@@ -118,62 +116,48 @@ function Header() {
                         <UserButton />
                     </div>
                     <div className="flex w-12 shrink lg:hidden items-end justify-end">
-                        <Button variant="ghost" onClick={() => setOpen(!isOpen)}>
-                            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                        </Button>
-                        {isOpen && (
-                            <div className="absolute top-20 mt-2 border flex flex-col w-full right-0 bg-background shadow-lg p-4 container border-border rounded-lg gap-5 ">
+                        <DropdownMenu modal={false}>
+                            <DropdownMenuTrigger>
+                                <Menu className="w-5 h-5" />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="mt-2 mx-auto p-2">
                                 {navigationItems.map((item) => (
-                                    <div key={item.title}>
-                                        <div className="flex flex-col gap-2">
-                                            {item.href ? (
-                                                <Link href={item.href} className="flex justify-between items-center">
-                                                    <span className="text-lg">{item.title}</span>
-                                                    <MoveRight className="w-4 h-4 stroke-1 text-muted-foreground " />
+                                    <div className="flex flex-col gap-2 p-4 w-full" key={item.title}>
+                                        {item.href ? (
+                                            <Link href={item.href} className="flex justify-between items-center">
+                                                <span className="text-lg">{item.title}</span>
+                                            </Link>
+                                        ) : (
+                                            <motion.div
+                                                whileHover={{
+                                                    scale: 1.05,
+                                                    zIndex: 1,
+                                                }}
+                                                className="w-fit cursor-default select-none"
+                                            >
+                                                <p className="text-lg">{item.title}</p>
+                                            </motion.div>
+                                        )}
+                                        {item.items &&
+                                            item.items.map((subItem) => (
+                                                <Link key={subItem.title} href={subItem.href} className="flex justify-between items-center">
+                                                    <motion.div
+                                                        whileTap={{
+                                                            scale: 0.9,
+                                                        }}
+                                                        whileHover={{
+                                                            scale: 1.05,
+                                                            zIndex: 1,
+                                                        }}
+                                                    >
+                                                        <span className="text-muted-foreground">{subItem.title}</span>
+                                                    </motion.div>
                                                 </Link>
-                                            ) : (
-                                                <motion.div
-                                                    whileHover={{
-                                                        scale: 1.05,
-                                                        zIndex: 1,
-                                                    }}
-                                                    className="w-fit"
-                                                >
-                                                    <p className="text-lg">{item.title}</p>
-                                                </motion.div>
-                                            )}
-                                            {item.items &&
-                                                item.items.map((subItem) => (
-                                                    <Link key={subItem.title} href={subItem.href} className="flex justify-between items-center">
-                                                        <motion.div
-                                                            whileTap={{
-                                                                scale: 0.9,
-                                                            }}
-                                                            whileHover={{
-                                                                scale: 1.05,
-                                                                zIndex: 1,
-                                                            }}
-                                                        >
-                                                            <span className="text-muted-foreground">{subItem.title}</span>
-                                                        </motion.div>
-                                                        <motion.div
-                                                            whileTap={{
-                                                                scale: 0.9,
-                                                            }}
-                                                            whileHover={{
-                                                                scale: 1.1,
-                                                                zIndex: 1,
-                                                            }}
-                                                        >
-                                                            <MoveRight className="w-4 h-4 stroke-1" />
-                                                        </motion.div>
-                                                    </Link>
-                                                ))}
-                                        </div>
+                                            ))}
                                     </div>
                                 ))}
-                            </div>
-                        )}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
             </header>
