@@ -12,7 +12,7 @@ export default function Home() {
                     titleHighlight: "QR Code",
                     description: "Create, share, and connect seamlessly in seconds.",
                     primaryAction: {
-                        href: "/docs/getting-started",
+                        href: "/register",
                         text: "Get Started",
                     },
                     secondaryAction: {
