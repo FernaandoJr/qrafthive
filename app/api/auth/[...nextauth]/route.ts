@@ -2,7 +2,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import GithubProvider from "next-auth/providers/github";
 import User from "@/models/User";
 import connectToDatabase from "@/lib/mongoose";
 import argon2 from "argon2";
@@ -12,10 +11,6 @@ const handler = NextAuth({
         strategy: "jwt",
     },
     providers: [
-        GithubProvider({
-            clientId: process.env.GITHUB_ID!,
-            clientSecret: process.env.GITHUB_SECRET!
-        }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!
@@ -47,17 +42,6 @@ const handler = NextAuth({
             },
         }),
     ],
-    cookies: {
-        sessionToken: {
-            name: `__Secure-next-auth.session-token`,
-            options: {
-                httpOnly: true,
-                sameSite: "lax",
-                path: "/",
-                secure: process.env.NODE_ENV === "production",
-            },
-        },
-    },
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
