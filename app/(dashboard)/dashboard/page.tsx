@@ -12,18 +12,11 @@ export default function Dashboard() {
         return <Spinner size="small" />
     }
 
-    const handleSignOut = async () => {
-        await signOut({ redirect: false })
-        router.push("/login")
-    }
 
     return (
         <div className="">
             {session ? (
-                <p>
-                    logged
-                    <p onClick={handleSignOut}>deslogar</p>
-                </p>
+                <p>logged</p>
             ) : (
                 <div className="flex justify-end p-4 gap-4">
                     <p>não logado vai logar</p>

@@ -1,6 +1,6 @@
 "use client"
 
-import Examples from "../components/sections/examples"
+import Examples from "../../components/sections/examples"
 import { Hero } from "@/components/sections/hero"
 import { StatisticsSection } from "@/components/sections/statistics-trip"
 import { Feature } from "@/components/ui/feature-with-advantages"
