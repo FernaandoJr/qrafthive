@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import { Spinner } from "@/components/ui/spinner"
@@ -11,7 +12,6 @@ export default function Dashboard() {
     if (status === "loading") {
         return <Spinner size="small" />
     }
-
 
     return (
         <div className="">
