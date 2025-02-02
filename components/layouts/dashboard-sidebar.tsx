@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client"
 import {
     Sidebar,
     SidebarContent,
@@ -9,10 +11,15 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import { Bookmark, ChartNoAxesCombined, ChevronDown, HelpCircle, Home, LogOut, Search, Settings } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu"
-import { DropdownMenuItem } from "../ui/dropdown-menu"
+import { Bookmark, ChartNoAxesCombined, ChevronDown, HelpCircle, Home, LogOut, QrCode, Search, Settings } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import { useRouter } from "next/router"
+import { useSession } from "next-auth/react"
+import { Spinner } from "../ui/spinner"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible"
 
 const items = [
     {
@@ -53,44 +60,55 @@ const items = [
 ]
 
 export function DashboardSidebar() {
+    const { data: session, status } = useSession()
+
+    if (status === "loading") {
+        return <Spinner size="small" />
+    }
+
+    const avatarFallback = session?.user?.name?.charAt(0).toUpperCase()
+
     return (
         <Sidebar>
             <SidebarHeader>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <SidebarMenuButton>
-                            Username
-                            <ChevronDown className="ml-auto" />
-                        </SidebarMenuButton>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-[--radix-popper-anchor-width] bg-background">
-                        <DropdownMenuItem>
-                            <span>Account</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <span>Billing</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <span>Sign out</span>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <SidebarMenuButton>Hi, {session?.user?.name}!</SidebarMenuButton>
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel>QRaftHive</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <a href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
+                            <Collapsible defaultOpen className="group/collapsible">
+                                <SidebarGroup>
+                                    <SidebarGroupLabel asChild>
+                                        <CollapsibleTrigger>
+                                            Help
+                                            <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                                        </CollapsibleTrigger>
+                                    </SidebarGroupLabel>
+                                    <CollapsibleContent>
+                                        <SidebarGroupContent>
+                                            <SidebarMenuItem>
+                                                <SidebarMenuButton asChild>
+                                                    <a href="">
+                                                        <QrCode />
+                                                        FAQ
+                                                    </a>
+                                                </SidebarMenuButton>
+                                            </SidebarMenuItem>
+                                            <SidebarMenuItem>
+                                                <SidebarMenuButton>Contact Support</SidebarMenuButton>
+                                            </SidebarMenuItem>
+                                            <SidebarMenuItem>
+                                                <SidebarMenuButton>User Guide</SidebarMenuButton>
+                                            </SidebarMenuItem>
+                                            <SidebarMenuItem>
+                                                <SidebarMenuButton>Video Tutorials</SidebarMenuButton>
+                                            </SidebarMenuItem>
+                                        </SidebarGroupContent>
+                                    </CollapsibleContent>
+                                </SidebarGroup>
+                            </Collapsible>
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
