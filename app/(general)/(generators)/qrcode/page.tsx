@@ -1,4 +1,6 @@
 "use client"
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import React, { useRef } from "react"
 import { QRCodeCanvas, QRCodeSVG } from "qrcode.react"
 import { useState } from "react"
@@ -15,8 +17,21 @@ import { Textarea } from "@/components/ui/textarea"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { TooltipInfo } from "@/components/ui/tooltip-info"
 import { motion } from "framer-motion"
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import { ArrowRight, Bookmark, Download } from "lucide-react"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import Link from "next/link"
 
 function downloadStringAsFile(data: string, filename: string) {
     const a = document.createElement("a")
@@ -46,6 +61,10 @@ export default function Qrcode() {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const svgRef = useRef<SVGSVGElement>(null)
     const [fileName, setFileName] = useState("qrafthive-qrcode")
+	const router = useRouter()
+	const { data: session, status } = useSession()
+
+
 
     function onCanvasButtonClick() {
         const node = canvasRef.current
@@ -372,8 +391,9 @@ export default function Qrcode() {
                     </TabsContent>
 
                     {/* Parte direita do QRCode */}
-                    <div className="flex items-center justify-center sm:w-full sm:mt-4 md:mt-0">
+                    <div className="flex items-center justify-end sm:w-full sm:mt-4 md:mt-0">
                         <Separator orientation="vertical" className="mx-10 hidden sm:block lg:block" />
+
                         <div className="flex flex-col items-center">
                             <Separator orientation="horizontal" className="mx-8 mt-8 mb-4 block sm:hidden md:hidden lg:hidden" />
 
@@ -417,42 +437,87 @@ export default function Qrcode() {
                                 }}
                                 className="my-4 h-[250px] w-[250px] hidden"
                             />
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.99 }} className="">
-                                        <Button variant="default">Download</Button>
-                                    </motion.div>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-80">
-                                    <div className="grid gap-4">
-                                        <div className="space-y-2">
-                                            <h4 className="font-medium leading-none">Set a file name</h4>
-                                            <p className="text-sm text-muted-foreground">Set a custom file name for the QR Code.</p>
-                                        </div>
-                                        <div className="grid gap-2">
-                                            <div className="grid grid-cols-3 items-center gap-4">
-                                                <Label htmlFor="width">Name</Label>
-                                                <Input
-                                                    id="filename"
-                                                    value={fileName}
-                                                    onChange={(event) => {
-                                                        setFileName(event.target.value)
-                                                    }}
-                                                    className="col-span-2 h-8"
-                                                />
+                            <div className="flex justify-between flex-nowrap w-full flex-row-reverse">
+                                <motion.div className="" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.99 }}>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button
+                                                variant="expandIcon"
+                                                className="text-white bg-purple-600 hover:bg-purple-700"
+                                                Icon={() => <Bookmark className="h-4 w-4" />}
+                                                iconPlacement="right"
+                                            >
+                                                Favorite
+                                            </Button>
+                                        </AlertDialogTrigger>
+										{session ? (
+											<AlertDialogContent>
+  <AlertDialogHeader>
+    <AlertDialogTitle>Save QR Code</AlertDialogTitle>
+    <AlertDialogDescription>
+      Are you sure you want to save this QR code? This action will store the QR code in your account.
+    </AlertDialogDescription>
+  </AlertDialogHeader>
+  <AlertDialogFooter>
+    <AlertDialogCancel>Cancel</AlertDialogCancel>
+    <AlertDialogAction>Save</AlertDialogAction>
+  </AlertDialogFooter>
+</AlertDialogContent>
+                                        ) : (
+											<AlertDialogContent>
+											<AlertDialogHeader>
+												<AlertDialogTitle>Not Logged In</AlertDialogTitle>
+												<AlertDialogDescription>
+													You need to be logged in to perform this action. Please log in to continue.
+												</AlertDialogDescription>
+											</AlertDialogHeader>
+											<AlertDialogFooter>
+												<AlertDialogCancel>Cancel</AlertDialogCancel>
+												<AlertDialogAction asChild>
+													<Link href="/login">Login</Link>
+												</AlertDialogAction>
+											</AlertDialogFooter>
+										</AlertDialogContent>
+                                        )}
+                                    </AlertDialog>
+                                </motion.div>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.99 }} className="">
+                                            <Button variant="default">Download</Button>
+                                        </motion.div>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-80">
+                                        <div className="grid gap-4">
+                                            <div className="space-y-2">
+                                                <h4 className="font-medium leading-none">Set a file name</h4>
+                                                <p className="text-sm text-muted-foreground">Set a custom file name for the QR Code.</p>
                                             </div>
-                                            <div className="flex flex-row items-center gap-2 mt-5 justify-center">
-                                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.99 }} className="">
-                                                    <Button onClick={onSVGButtonClick}>SVG</Button>
-                                                </motion.div>
-                                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.99 }} className="">
-                                                    <Button onClick={onCanvasButtonClick}>PNG</Button>
-                                                </motion.div>
+                                            <div className="grid gap-2">
+                                                <div className="grid grid-cols-3 items-center gap-4">
+                                                    <Label htmlFor="width">Name</Label>
+                                                    <Input
+                                                        id="filename"
+                                                        value={fileName}
+                                                        onChange={(event) => {
+                                                            setFileName(event.target.value)
+                                                        }}
+                                                        className="col-span-2 h-8"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-row items-center gap-2 mt-5 justify-center">
+                                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.99 }} className="">
+                                                        <Button onClick={onSVGButtonClick}>SVG</Button>
+                                                    </motion.div>
+                                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.99 }} className="">
+                                                        <Button onClick={onCanvasButtonClick}>PNG</Button>
+                                                    </motion.div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </PopoverContent>
-                            </Popover>
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
                         </div>
                     </div>
                 </div>
