@@ -12,8 +12,8 @@ interface User extends Document {
 const UserSchema: Schema<User> = new mongoose.Schema(
     {
         fullName: { type: String, required: true },
-        email: { type: String, required: true, unique: true },
-        password: { type: String, required: true },
+        email: { type: String, unique: true },
+        password: { type: String },
         role: {
             type: String,
             enum: ["user", "admin"],

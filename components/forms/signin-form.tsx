@@ -6,7 +6,7 @@ import { Button } from "../ui/button"
 import { motion } from "framer-motion"
 import { Checkbox } from "../ui/checkbox"
 import Link from "next/link"
-import { RiFacebookFill, RiGithubFill, RiGoogleFill, RiTwitterXFill } from "@remixicon/react"
+import { RiGithubFill, RiGoogleFill } from "@remixicon/react"
 import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
@@ -130,19 +130,9 @@ export default function SigninForm() {
                                 </span>
                                 Login with Google
                             </Button>
-                            <Button className="bg-[#14171a] text-white after:flex-1 hover:bg-[#14171a]/90">
-                                <span className="pointer-events-none me-2 flex-1">
-                                    <RiTwitterXFill className="opacity-60" size={16} aria-hidden="true" />
-                                </span>
-                                Login with X
-                            </Button>
-                            <Button className="bg-[#1877f2] text-white after:flex-1 hover:bg-[#1877f2]/90">
-                                <span className="pointer-events-none me-2 flex-1">
-                                    <RiFacebookFill className="opacity-60" size={16} aria-hidden="true" />
-                                </span>
-                                Login with Facebook
-                            </Button>
-                            <Button onClick={(e) => handleProvider(e, "github")}
+
+                            <Button
+                                onClick={(e) => handleProvider(e, "github")}
                                 className="bg-[#333333] text-white after:flex-1 hover:bg-[#333333]/90"
                             >
                                 <span className="pointer-events-none me-2 flex-1">
