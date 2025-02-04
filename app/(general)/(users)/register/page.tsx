@@ -1,5 +1,10 @@
 import SignupForm from "@/components/forms/signup-form"
 
+export const metadata = {
+    title: "Register - QRaftHive",
+    description: "Register to create an account",
+}
+
 export default function Register() {
     return (
         <>
