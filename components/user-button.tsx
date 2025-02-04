@@ -1,10 +1,10 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useSession, signOut } from "next-auth/react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Spinner } from "./ui/spinner"
+import { useRouter } from "next/navigation"
 
 export const UserButton = () => {
     const router = useRouter()
@@ -18,7 +18,7 @@ export const UserButton = () => {
 
     const handleSignOut = async () => {
         await signOut({ redirect: false })
-        router.push("/login")
+        window.location.href = "/"
     }
 
     return (
@@ -48,9 +48,7 @@ export const UserButton = () => {
                 </DropdownMenu>
             ) : (
                 <div className="flex justify-end p-4 gap-4">
-                    <Button>
-                        <Link href="/login">Sign in</Link>
-                    </Button>
+                    <Button onClick={() => router.push("/login")}>Sign in</Button>
                 </div>
             )}
         </div>
