@@ -5,19 +5,25 @@ interface User extends Document {
     email: string
     password: string
     role: "user" | "admin"
+    provider: "manual" | "google" | "github";
     createdAt?: Date
     updatedAt?: Date
 }
 
 const UserSchema: Schema<User> = new mongoose.Schema(
     {
-        fullName: { type: String, required: true },
+        fullName: { type: String },
         email: { type: String, unique: true },
         password: { type: String },
         role: {
             type: String,
             enum: ["user", "admin"],
             default: "user",
+        },
+        provider: {
+            type: String,
+            enum: ["manual", "google", "github"],
+            default: "manual",
         },
     },
     {

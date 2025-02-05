@@ -59,10 +59,10 @@ const handler = NextAuth({
         async signIn({ account, profile }) {
             if (account?.provider === "github" || account?.provider === "google") {
                 await connectToDatabase();
-                const existinUser = await User.findOne({ email: profile?.email });
-                if (!existinUser) {
+                const existingUser = await User.findOne({ email: profile?.email });
+                if (!existingUser) {
                     await User.create({
-                        name: profile?.name,
+                        fullName: profile?.name,
                         email: profile?.email,
                     })
                 }
