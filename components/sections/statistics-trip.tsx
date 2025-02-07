@@ -27,7 +27,7 @@ export function StatisticsSection() {
         //         </div>
         //     </div>
         // </div>
-        <div className="container grid grid-cols-5 gap-4">
+        <div className="container grid lg:grid-cols-5 gap-4 md:grid md:grid-cols-1">
             <div className="flex flex-col items-center justify-center">
                 <span className="text-4xl font-bold flex flex-col items-center justify-center">
                     <NumberTicker value={1000} />
