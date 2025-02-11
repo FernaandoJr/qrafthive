@@ -1,4 +1,4 @@
-# ⚠️ W.I.P. Project ⚠️ 
+# ⚠️ W.I.P. ⚠️ 
 
 # Product Backlog - Qrafthive
 
