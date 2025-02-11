@@ -14,43 +14,34 @@ import {
     SidebarMenuSub,
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import { Bookmark, ChartNoAxesCombined, ChevronDown, HelpCircle, Home, LogOut, QrCode, Search, Settings } from "lucide-react"
+import { Bookmark, ChartNoAxesCombined, ChevronDown, CircleHelp, HelpCircle, Home, LogOut, QrCode, Search, Settings, User } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { useRouter } from "next/router"
-import { useSession } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react"
 import { Spinner } from "../ui/spinner"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible"
+import { useState } from "react"
 
 const items = [
     {
-        title: "Home",
-        url: "#",
+        title: "Start page",
+        url: "/",
         icon: Home,
     },
     {
         title: "My QR Codes",
-        url: "#",
+        url: "my-qrcodes",
         icon: Bookmark,
     },
     {
         title: "Analytics",
-        url: "#",
+        url: "analytics",
         icon: ChartNoAxesCombined,
     },
     {
         title: "Settings",
-        url: "#",
+        url: "settings",
         icon: Settings,
-    },
-    {
-        title: "Profile",
-        url: "#",
-        icon: Search,
-    },
-    {
-        title: "Help",
-        url: "#",
-        icon: HelpCircle,
     },
     {
         title: "Logout",
@@ -61,58 +52,63 @@ const items = [
 
 export function DashboardSidebar() {
     const { data: session, status } = useSession()
+    const [userName, setUserName] = useState(session?.user?.name)
 
     if (status === "loading") {
         return <Spinner size="small" />
     }
 
+    const handleSignOut = async () => {
+        await signOut({ redirect: false })
+        window.location.href = "/"
+    }
+
     const avatarFallback = session?.user?.name?.charAt(0).toUpperCase()
 
     return (
-        <Sidebar>
-            <SidebarHeader>
-                <SidebarMenuButton>Hi, {session?.user?.name}!</SidebarMenuButton>
-            </SidebarHeader>
-            <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel>QRaftHive</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            <Collapsible defaultOpen className="group/collapsible">
-                                <SidebarGroup>
-                                    <SidebarGroupLabel asChild>
-                                        <CollapsibleTrigger>
-                                            Help
-                                            <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                                        </CollapsibleTrigger>
-                                    </SidebarGroupLabel>
-                                    <CollapsibleContent>
-                                        <SidebarGroupContent>
-                                            <SidebarMenuItem>
-                                                <SidebarMenuButton asChild>
-                                                    <a href="">
-                                                        <QrCode />
-                                                        FAQ
+        <>
+            {session?.user ? (
+                <Sidebar>
+                    <SidebarHeader>
+                        <SidebarMenuButton>
+                            {(session.user.name?.length ?? 0) > 16 ? session.user.name?.substring(0, 16).trimEnd() + "..." : session.user.name}
+                        </SidebarMenuButton>
+                    </SidebarHeader>
+                    <SidebarContent>
+                        <SidebarGroup>
+                            <SidebarGroupLabel>QRaftHive</SidebarGroupLabel>
+                            <SidebarGroupContent>
+                                <SidebarMenu>
+                                    {items.map((item) => (
+                                        <SidebarMenuItem key={item.title}>
+                                            <SidebarMenuButton asChild>
+                                                {item.title === "Logout" ? (
+                                                    <a
+                                                        onClick={handleSignOut}
+                                                        className="hover:text-destructive hover:cursor-pointer transition-all ease-in-out duration-200"
+                                                    >
+                                                        <item.icon />
+                                                        <span>{item.title}</span>
                                                     </a>
-                                                </SidebarMenuButton>
-                                            </SidebarMenuItem>
-                                            <SidebarMenuItem>
-                                                <SidebarMenuButton>Contact Support</SidebarMenuButton>
-                                            </SidebarMenuItem>
-                                            <SidebarMenuItem>
-                                                <SidebarMenuButton>User Guide</SidebarMenuButton>
-                                            </SidebarMenuItem>
-                                            <SidebarMenuItem>
-                                                <SidebarMenuButton>Video Tutorials</SidebarMenuButton>
-                                            </SidebarMenuItem>
-                                        </SidebarGroupContent>
-                                    </CollapsibleContent>
-                                </SidebarGroup>
-                            </Collapsible>
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-            </SidebarContent>
-        </Sidebar>
+                                                ) : (
+                                                    <a href={item.url}>
+                                                        <item.icon />
+                                                        <span>{item.title}</span>
+                                                    </a>
+                                                )}
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    ))}
+                                </SidebarMenu>
+                            </SidebarGroupContent>
+                        </SidebarGroup>
+                    </SidebarContent>
+                </Sidebar>
+            ) : (
+                <>
+                    <p>asd</p>
+                </>
+            )}
+        </>
     )
 }
