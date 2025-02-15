@@ -41,7 +41,7 @@ function Feature() {
                         <p className="text-lg max-w-xl lg:max-w-xl leading-relaxed tracking-tight text-muted-foreground">Working with QR codes can be tricky. QRaftHive makes it easy.</p>
                     </div>
                     <div className="flex gap-10 pt-8 flex-col w-full">
-                        <div className="grid grid-cols-2 items-start lg:grid-cols-3 gap-10">
+                        <div className="grid grid-cols-1 items-start lg:grid-cols-3 gap-10">
                             {featuresList.map((feature, index) => (
                                 <div key={index} className="flex flex-row gap-6 w-full items-start">
                                     <Check className="w-8 h-8 mt-2 text-primary" />
