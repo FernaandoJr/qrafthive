@@ -10,6 +10,7 @@
         "setup": "npm install && npm run build && npm run dev"
     },
     "dependencies": {
+        "@auth/core": "^0.34.2",
         "@number-flow/react": "^0.5.5",
         "@radix-ui/react-alert-dialog": "^1.1.5",
         "@radix-ui/react-avatar": "^1.1.2",
