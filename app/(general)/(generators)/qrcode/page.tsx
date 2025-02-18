@@ -32,6 +32,7 @@ import {
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
+import User from "@/models/User"
 
 function downloadStringAsFile(data: string, filename: string) {
     const a = document.createElement("a")
@@ -104,13 +105,14 @@ export default function Qrcode() {
             return
         }
 
+
         const response = await fetch("../../../api/qrcode/linkQrcode", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                owner: session.user._id,
+                owner: "2",
                 attributes: {
                     content: content,
                     size: imageSize,
