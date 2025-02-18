@@ -3,6 +3,7 @@
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     // SidebarFooter
     SidebarGroup,
     SidebarGroupContent,
@@ -14,17 +15,33 @@ import {
     SidebarMenuSub,
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import { Bookmark, ChartNoAxesCombined, ChevronDown, CircleHelp, HelpCircle, Home, LogOut, QrCode, Search, Settings, User } from "lucide-react"
+import {
+    Bookmark,
+    ChartNoAxesCombined,
+    ChevronDown,
+    ChevronUp,
+    CircleHelp,
+    HelpCircle,
+    Home,
+    LogOut,
+    QrCode,
+    Search,
+    Settings,
+    User,
+    User2,
+} from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { useRouter } from "next/router"
 import { useSession, signOut } from "next-auth/react"
 import { Spinner } from "../ui/spinner"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible"
 import { useState } from "react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
 
 const items = [
     {
-        title: "Start page",
+        title: "Overview",
         url: "/",
         icon: Home,
     },
@@ -43,24 +60,15 @@ const items = [
         url: "settings",
         icon: Settings,
     },
-    {
-        title: "Logout",
-        url: "#",
-        icon: LogOut,
-    },
 ]
 
 export function DashboardSidebar() {
     const { data: session, status } = useSession()
     const [userName, setUserName] = useState(session?.user?.name)
 
-    if (status === "loading") {
-        return <Spinner size="small" />
-    }
-
     const handleSignOut = async () => {
         await signOut({ redirect: false })
-        window.location.href = "/"
+        window.location.href = "/dashboard"
     }
 
     const avatarFallback = session?.user?.name?.charAt(0).toUpperCase()
@@ -82,20 +90,13 @@ export function DashboardSidebar() {
                                     {items.map((item) => (
                                         <SidebarMenuItem key={item.title}>
                                             <SidebarMenuButton asChild>
-                                                {item.title === "Logout" ? (
-                                                    <a
-                                                        onClick={handleSignOut}
-                                                        className="hover:text-destructive hover:cursor-pointer transition-all ease-in-out duration-200"
-                                                    >
-                                                        <item.icon />
-                                                        <span>{item.title}</span>
-                                                    </a>
-                                                ) : (
-                                                    <a href={item.url}>
-                                                        <item.icon />
-                                                        <span>{item.title}</span>
-                                                    </a>
-                                                )}
+                                                <a
+                                                    onClick={handleSignOut}
+                                                    className="hover:text-destructive hover:cursor-pointer transition-all ease-in-out duration-200"
+                                                >
+                                                    <item.icon />
+                                                    <span>{item.title}</span>
+                                                </a>
                                             </SidebarMenuButton>
                                         </SidebarMenuItem>
                                     ))}
@@ -105,9 +106,7 @@ export function DashboardSidebar() {
                     </SidebarContent>
                 </Sidebar>
             ) : (
-                <>
-                    <p>asd</p>
-                </>
+                <></>
             )}
         </>
     )

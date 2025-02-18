@@ -7,6 +7,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import { Inter } from "next/font/google"
 import { Header } from "@/components/layouts/header"
+import DashboardNavbar from "@/components/layouts/dashboard-navbar"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -18,7 +19,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
                         <SidebarProvider>
                             <DashboardSidebar />
-                            <div className="">{children}</div>
+                            <div className="flex flex-col w-full">
+                                <DashboardNavbar />
+                                {children}
+                            </div>
                         </SidebarProvider>
                     </ThemeProvider>
                 </ClientProvider>

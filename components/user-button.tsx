@@ -37,7 +37,12 @@ export const UserButton = () => {
                             <AvatarImage className="size-20 transition" src={session.user?.image || undefined} />
                             <AvatarFallback className="bg-sky-900 text-3xl select-none text-white">{avatarFallback}</AvatarFallback>
                         </Avatar>
-                        <p className="scroll-m-20 text-xl font-semibold tracking-tight">Hi, {session.user?.name}!</p>
+                        <p className="scroll-m-20 text-xl font-semibold tracking-tight">
+                            Hi,{" "}
+                            {session.user && (session.user.name?.length ?? 0) > 16
+                                ? session.user.name?.substring(0, 16).trimEnd() + "..."
+                                : session.user?.name}
+                        </p>
                         <Button className="w-full rounded-full h-fit border-border border" variant="ghost">
                             <Link href="/dashboard">Manage Account</Link>
                         </Button>

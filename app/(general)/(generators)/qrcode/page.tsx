@@ -61,10 +61,8 @@ export default function Qrcode() {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const svgRef = useRef<SVGSVGElement>(null)
     const [fileName, setFileName] = useState("qrafthive-qrcode")
-	const router = useRouter()
-	const { data: session, status } = useSession()
-
-
+    const router = useRouter()
+    const { data: session } = useSession()
 
     function onCanvasButtonClick() {
         const node = canvasRef.current
@@ -86,12 +84,6 @@ export default function Qrcode() {
         if (node == null) {
             return
         }
-
-        // For SVG, we need to get the markup and turn it into XML.
-        // Using XMLSerializer is the easiest way to ensure the markup
-        // contains the xmlns. Then we make sure it gets the right DOCTYPE,
-        // encode all of that to be safe to be encoded as a URI (which we
-        // need to stuff into href).
         const serializer = new XMLSerializer()
         const fileURI =
             "data:image/svg+xmlcharset=utf-8," + encodeURIComponent('<?xml version="1.0" standalone="no"?>' + serializer.serializeToString(node))
@@ -101,6 +93,43 @@ export default function Qrcode() {
         }
 
         downloadStringAsFile(fileURI, fileName + ".svg")
+    }
+
+    const saveQRcode = async () => {
+        if (!session) {
+            router.push("/login")
+            return
+        }
+        if (session.user === undefined) {
+            return
+        }
+
+        const response = await fetch("../../../api/qrcode/linkQrcode", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                owner: session.user._id,
+                attributes: {
+                    content: content,
+                    size: imageSize,
+                    errorLevel: errorLevel,
+                    marginSize: marginSize,
+                    boostLevel: boostLevel,
+                    fgColor: fgColor,
+                    bgColor: bgColor,
+                    imageSettings: {
+                        src: imageURL,
+                        excavate: excavateImage,
+                        height: imageHeight,
+                        width: imageWidth,
+                        x: imageX,
+                        y: imageY,
+                    },
+                },
+            }),
+        })
     }
 
     return (
@@ -450,34 +479,35 @@ export default function Qrcode() {
                                                 Favorite
                                             </Button>
                                         </AlertDialogTrigger>
-										{session ? (
-											<AlertDialogContent>
-  <AlertDialogHeader>
-    <AlertDialogTitle>Save QR Code</AlertDialogTitle>
-    <AlertDialogDescription>
-      Are you sure you want to save this QR code? This action will store the QR code in your account.
-    </AlertDialogDescription>
-  </AlertDialogHeader>
-  <AlertDialogFooter>
-    <AlertDialogCancel>Cancel</AlertDialogCancel>
-    <AlertDialogAction>Save</AlertDialogAction>
-  </AlertDialogFooter>
-</AlertDialogContent>
+                                        {session ? (
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Save QR Code</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        Are you sure you want to save this QR code? This action will store the QR code in your
+                                                        account.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction>Save</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
                                         ) : (
-											<AlertDialogContent>
-											<AlertDialogHeader>
-												<AlertDialogTitle>Not Logged In</AlertDialogTitle>
-												<AlertDialogDescription>
-													You need to be logged in to perform this action. Please log in to continue.
-												</AlertDialogDescription>
-											</AlertDialogHeader>
-											<AlertDialogFooter>
-												<AlertDialogCancel>Cancel</AlertDialogCancel>
-												<AlertDialogAction asChild>
-													<Link href="/login">Login</Link>
-												</AlertDialogAction>
-											</AlertDialogFooter>
-										</AlertDialogContent>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Not Logged In</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        You need to be logged in to perform this action. Please log in to continue.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction asChild>
+                                                        <Link href="/login">Login</Link>
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
                                         )}
                                     </AlertDialog>
                                 </motion.div>

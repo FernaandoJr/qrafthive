@@ -14,14 +14,14 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="">
+        <>
             {session ? (
-                <p>logged</p>
-            ) : (
-                <div className="flex justify-end p-4 gap-4">
-                    <p>não logado vai logar</p>
+                <div className="">
+                    <p>logged</p>
                 </div>
+            ) : (
+                <p>não logado vai logar</p>
             )}
-        </div>
+        </>
     )
 }

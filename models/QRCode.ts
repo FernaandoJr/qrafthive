@@ -22,7 +22,7 @@ interface QRCode extends Document {
 }
 
 const QRCodeSchema: Schema<QRCode> = new mongoose.Schema({
-    owner: { type: mongoose.Schema.Types.ObjectId, required: true },
+    owner: { type: mongoose.Types.ObjectId, required: true },
     attributes: {
         content: { type: String, required: true },
         size: { type: Number, required: true },
@@ -43,3 +43,5 @@ const QRCodeSchema: Schema<QRCode> = new mongoose.Schema({
 })
 
 const QRCode: Model<QRCode> = mongoose.models.QRCode || mongoose.model<QRCode>("QRCode", QRCodeSchema)
+
+export default QRCode
