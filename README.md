@@ -1,3 +1,5 @@
+# ⚠️ W.I.P. ⚠️ 
+
 # Product Backlog - Qrafthive
 
 Qrafthive é um aplicativo web que permite a criação de QR Codes personalizados de maneira intuitiva e funcional. O projeto utiliza **Next.js**, **TypeScript** e **MongoDB** como principais tecnologias.
