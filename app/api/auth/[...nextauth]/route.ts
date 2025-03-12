@@ -1,11 +1,22 @@
-
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import Github from "next-auth/providers/github";
 import User from "@/models/User";
-import connectToDatabase from "@/lib/mongoose";
+import connectDB from "@/lib/mongoose";
+import mongoose from "mongoose";
 import argon2 from "argon2";
+
+declare module "next-auth" {
+    interface Session {
+        user: {
+            id: string;
+            email: string;
+            name: string;
+            image: string;
+        };
+    }
+}
 
 const handler = NextAuth({
     session: {
@@ -27,7 +38,7 @@ const handler = NextAuth({
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
-                await connectToDatabase();
+                await connectDB();
 
                 const user = await User.findOne({ email: credentials?.email });
                 if (!user) {
@@ -40,7 +51,7 @@ const handler = NextAuth({
                 }
 
                 return {
-                    id: user.id,
+                    id: (user._id as mongoose.Types.ObjectId).toString(),
                     email: user.email,
                     name: user.fullName,
                 };
@@ -58,7 +69,7 @@ const handler = NextAuth({
         },
         async signIn({ account, profile }) {
             if (account?.provider === "github" || account?.provider === "google") {
-                await connectToDatabase();
+                await connectDB();
                 const existingUser = await User.findOne({ email: profile?.email });
                 if (!existingUser) {
                     await User.create({
@@ -67,13 +78,15 @@ const handler = NextAuth({
                     })
                 }
             }
-            return true // Do different verification for other providers that don't have `email_verified`
+            return true 
         },
         async session({ session, token }) {
             if (token) {
                 session.user = {
-                    email: token.email,
-                    name: token.name,
+                    id: token.id as string,
+                    email: token.email as string,
+                    name: token.name as string,
+                    image: token.image as string,
                 };
             }
             return session;

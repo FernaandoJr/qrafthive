@@ -32,7 +32,6 @@ import {
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
-import User from "@/models/User"
 
 function downloadStringAsFile(data: string, filename: string) {
     const a = document.createElement("a")
@@ -64,6 +63,7 @@ export default function Qrcode() {
     const [fileName, setFileName] = useState("qrafthive-qrcode")
     const router = useRouter()
     const { data: session } = useSession()
+
 
     function onCanvasButtonClick() {
         const node = canvasRef.current
@@ -112,7 +112,7 @@ export default function Qrcode() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                owner: "2",
+                owner: session.user.id,
                 attributes: {
                     content: content,
                     size: imageSize,
