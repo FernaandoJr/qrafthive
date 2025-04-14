@@ -145,7 +145,7 @@ export default function Qrcode() {
                     <TabsTrigger value="color">Color</TabsTrigger>
                     <TabsTrigger value="image">Image</TabsTrigger>
                 </TabsList>
-                <div className="flex flex-col sm:flex-col md:flex-row gap-8 w-full border border-border rounded-xl p-4 sm:p-6 md:p-8 h-fit">
+                <div className="flex flex-col sm:flex-col md:flex-row gap-8 w-full mx-auto border border-border rounded-xl p-4 sm:p-6 md:p-8 h-fit">
                     {/* Conteúdo de Informações do QRCode */}
                     <TabsContent value="information" className="w-full sm:w-[800px]">
                         <div className="input-div gap-5 w-full sm:w-3/4">
@@ -252,7 +252,7 @@ export default function Qrcode() {
 
                     {/* Conteúdo sobre Cores do QRCode */}
                     <TabsContent value="color" className="w-full sm:w-[800px]">
-                        <div className="input-div gap-5 w-full sm:w-3/4">
+                        <div className="input-div flex items-center lg:justify-end justify-center gap-5 w-full sm:w-3/4">
                             <div className="input-div">
                                 <Label htmlFor="background-color" className="text-muted-foreground">
                                     <TooltipInfo label="Background Color" tooltip="Background color for the QR code." />
@@ -422,7 +422,7 @@ export default function Qrcode() {
                     </TabsContent>
 
                     {/* Parte direita do QRCode */}
-                    <div className="flex items-center justify-end sm:w-full sm:mt-4 md:mt-0">
+                    <div className="flex items-center lg:justify-end justify-center sm:w-full sm:mt-4 md:mt-0">
                         <Separator orientation="vertical" className="mx-10 hidden sm:block lg:block" />
 
                         <div className="flex flex-col items-center">
