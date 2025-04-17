@@ -42,7 +42,7 @@ import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
 const items = [
     {
         title: "Overview",
-        url: "/",
+        url: "./",
         icon: Home,
     },
     {
@@ -86,21 +86,32 @@ export function DashboardSidebar() {
                         <SidebarGroup>
                             <SidebarGroupLabel>QRaftHive</SidebarGroupLabel>
                             <SidebarGroupContent>
-                                <SidebarMenu>
-                                    {items.map((item) => (
-                                        <SidebarMenuItem key={item.title}>
-                                            <SidebarMenuButton asChild>
-                                                <a
-                                                    onClick={handleSignOut}
-                                                    className="hover:text-destructive hover:cursor-pointer transition-all ease-in-out duration-200"
-                                                >
-                                                    <item.icon />
-                                                    <span>{item.title}</span>
-                                                </a>
-                                            </SidebarMenuButton>
-                                        </SidebarMenuItem>
-                                    ))}
-                                </SidebarMenu>
+                                {items.map((item) => (
+                                    <SidebarMenuItem key={item.title} className="list-none">
+                                        <SidebarMenuButton asChild>
+                                            <a
+                                                href={item.url} // Use o atributo href para redirecionar para a URL correta
+                                                className="hover:text-destructive hover:cursor-pointer transition-all ease-in-out duration-200"
+                                            >
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </a>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                ))}
+
+                                {/* Adicione um item separado para o logout */}
+                                <SidebarMenuItem className="list-none">
+                                    <SidebarMenuButton asChild>
+                                        <a
+                                            onClick={handleSignOut} // Apenas o botão de logout deve chamar handleSignOut
+                                            className="hover:text-destructive hover:cursor-pointer transition-all ease-in-out duration-200"
+                                        >
+                                            <LogOut />
+                                            <span>Logout</span>
+                                        </a>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
                             </SidebarGroupContent>
                         </SidebarGroup>
                     </SidebarContent>
