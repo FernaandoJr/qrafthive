@@ -10,7 +10,7 @@ interface QRCode extends Document {
         marginSize: number
         fgColor: string
         bgColor: string
-        errorlevel: ErrorLevel
+        errorLevel: ErrorLevel
         boostLevel: boolean
         imageSettings: {
             src: string

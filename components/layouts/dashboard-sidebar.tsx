@@ -48,81 +48,72 @@ const items = [
     },
     {
         title: "My QR Codes",
-        url: "my-qrcodes",
+        url: "/dashboard/my-qrcodes",
         icon: Bookmark,
     },
     {
         title: "Analytics",
-        url: "analytics",
+        url: "/dashboard/analytics",
         icon: ChartNoAxesCombined,
     },
     {
         title: "Settings",
-        url: "settings",
+        url: "/dashboard/settings",
         icon: Settings,
     },
 ]
 
 export function DashboardSidebar() {
     const { data: session, status } = useSession()
-    const [userName, setUserName] = useState(session?.user?.name)
 
     const handleSignOut = async () => {
         await signOut({ redirect: false })
         window.location.href = "/dashboard"
     }
 
-    const avatarFallback = session?.user?.name?.charAt(0).toUpperCase()
-
     return (
-        <>
-            {session?.user ? (
-                <Sidebar collapsible="icon" className="!text-xl h-screen bg-background shadow-md w-[11rem]">
-                    <SidebarHeader>
-                        <Link href={"/dashboard"}>
-                            <SidebarMenuButton>
-                                <QrCode />
-                                <span>Dashboard</span>
-                            </SidebarMenuButton>
-                        </Link>
-                    </SidebarHeader>
-                    <SidebarContent>
-                        <SidebarGroup>
-                            <SidebarGroupLabel>QRaftHive</SidebarGroupLabel>
-                            <SidebarGroupContent>
-                                {items.map((item) => (
-                                    <SidebarMenuItem key={item.title} className="list-none">
-                                        <SidebarMenuButton asChild>
-                                            <a
-                                                href={item.url} // Use o atributo href para redirecionar para a URL correta
-                                                className="hover:text-destructive hover:cursor-pointer transition-all ease-in-out duration-200"
-                                            >
-                                                <item.icon />
-                                                <span>{item.title}</span>
-                                            </a>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                ))}
+        <Sidebar collapsible="icon" className="!text-xl h-screen bg-background shadow-md w-[11rem]">
+            <SidebarHeader>
+                <Link href={"/dashboard"}>
+                    <SidebarMenuButton>
+                        <QrCode />
+                        <span>Dashboard</span>
+                    </SidebarMenuButton>
+                </Link>
+            </SidebarHeader>
+            <SidebarContent>
+                <SidebarGroup>
+                    <SidebarGroupLabel>QRaftHive</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        {items.map((item) => (
+                            <SidebarMenuItem key={item.title} className="list-none">
+                                <SidebarMenuButton asChild>
+                                    <a
+                                        href={item.url} // Use o atributo href para redirecionar para a URL correta
+                                        className="hover:text-destructive hover:cursor-pointer transition-all ease-in-out duration-200"
+                                    >
+                                        <item.icon />
+                                        <span>{item.title}</span>
+                                    </a>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        ))}
 
-                                {/* Adicione um item separado para o logout */}
-                                <SidebarMenuItem className="list-none">
-                                    <SidebarMenuButton asChild>
-                                        <a
-                                            onClick={handleSignOut} // Apenas o botão de logout deve chamar handleSignOut
-                                            className="hover:text-destructive hover:cursor-pointer transition-all ease-in-out duration-200"
-                                        >
-                                            <LogOut />
-                                            <span>Logout</span>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            </SidebarGroupContent>
-                        </SidebarGroup>
-                    </SidebarContent>
-                </Sidebar>
-            ) : (
-                <></>
-            )}
-        </>
+                        {/* Adicione um item separado para o logout */}
+                        <SidebarMenuItem className="list-none">
+                            <SidebarMenuButton asChild>
+                                <a
+                                    onClick={handleSignOut} // Apenas o botão de logout deve chamar handleSignOut
+                                    className="hover:text-destructive hover:cursor-pointer transition-all ease-in-out duration-200"
+                                >
+                                    <LogOut />
+                                    <span>Logout</span>
+                                </a>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+            </SidebarContent>
+        </Sidebar>
     )
 }

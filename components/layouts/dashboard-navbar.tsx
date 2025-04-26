@@ -19,14 +19,13 @@ export default function DashboardNavbar() {
     }
 
     return (
-        <header className="w-full flex justify-between items-center p-4 h-fit top-0 left-0 shadow-md">
+        <header className="flex justify-between items-center p-4 h-20  shadow-md">
             <div className="flex items-center">
                 <SidebarTrigger>
                     <Menu className="cursor-pointer" />
                 </SidebarTrigger>
             </div>
-            <p>Dashboard</p>
-            <div className="hidden lg:flex">
+            <div className=" lg:flex">
                 <UserButton />
             </div>
         </header>

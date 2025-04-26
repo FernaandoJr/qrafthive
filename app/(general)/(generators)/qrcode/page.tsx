@@ -32,6 +32,8 @@ import {
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
+import { toast } from "@/hooks/use-toast"
+import { Toaster } from "@/components/ui/toaster"
 
 function downloadStringAsFile(data: string, filename: string) {
     const a = document.createElement("a")
@@ -132,10 +134,34 @@ export default function Qrcode() {
                 },
             }),
         })
+
+        if (response.status === 200) {
+            return toast({
+                title: "QRCode saved!",
+                description: "QRCode saved successfully",
+                className: "bg-green-600",
+                duration: 5000,
+            })
+        } else if (response.status === 400) {
+            return toast({
+                title: "QRCode already exists!",
+                description: "QRCode already exists in your favorites",
+                duration: 5000,
+                variant: "destructive",
+            })
+        } else {
+            return toast({
+                title: "Error saving QRCode!",
+                description: "An error occurred while saving the QRCode",
+                duration: 5000,
+                variant: "destructive",
+            })
+        }
     }
 
     return (
         <div className="rounded-lg max-w-[1200px] mx-auto px-4 py-12 md:px-6 lg:px-8 flex flex-row justify-center md:max-w-[800px]">
+            <Toaster></Toaster>
             {
                 // Lista das Janelas
             }

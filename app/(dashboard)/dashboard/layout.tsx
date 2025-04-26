@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                             <DashboardSidebar />
                             <div className="flex flex-col w-full">
                                 <DashboardNavbar />
-                                {children}
+                                <div className="p-4">{children}</div>
                             </div>
                         </SidebarProvider>
                     </ThemeProvider>
