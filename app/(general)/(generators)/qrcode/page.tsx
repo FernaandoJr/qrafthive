@@ -45,8 +45,8 @@ type ErrorLevel = "L" | "M" | "Q" | "H"
 export default function Qrcode() {
     const [bgColor, setBgColor] = useState("#FFFFFF")
     const [fgColor, setFgColor] = useState("#000000")
-    const [imageX, setImageX] = useState<number | undefined>(undefined)
-    const [imageY, setImageY] = useState<number | undefined>(undefined)
+    const [imageX, setImageX] = useState<number | null>(null)
+    const [imageY, setImageY] = useState<number | null>(null)
     const [marginSize, setMarginSize] = useState(1)
     const [boostLevel, setBoostLevel] = useState(true)
     const [centerImage, setCenterImage] = useState(true)
@@ -63,7 +63,6 @@ export default function Qrcode() {
     const [fileName, setFileName] = useState("qrafthive-qrcode")
     const router = useRouter()
     const { data: session } = useSession()
-
 
     function onCanvasButtonClick() {
         const node = canvasRef.current
@@ -105,8 +104,9 @@ export default function Qrcode() {
             return
         }
 
+        console.log("session", session.user.id)
 
-        const response = await fetch("../../../api/qrcode/linkQrcode", {
+        const response = await fetch("../../../api/qrcode/favorite", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -116,7 +116,7 @@ export default function Qrcode() {
                 attributes: {
                     content: content,
                     size: imageSize,
-                    errorLevel: errorLevel,
+                    errorLevel: errorLevel as ErrorLevel,
                     marginSize: marginSize,
                     boostLevel: boostLevel,
                     fgColor: fgColor,
@@ -126,8 +126,8 @@ export default function Qrcode() {
                         excavate: excavateImage,
                         height: imageHeight,
                         width: imageWidth,
-                        x: imageX,
-                        y: imageY,
+                        x: imageX !== undefined ? imageX : null,
+                        y: imageY !== undefined ? imageY : null,
                     },
                 },
             }),
@@ -361,8 +361,8 @@ export default function Qrcode() {
                                         onCheckedChange={(NewValue: boolean) => {
                                             setCenterImage(NewValue)
                                             if (NewValue) {
-                                                setImageX(undefined)
-                                                setImageY(undefined)
+                                                setImageX(null)
+                                                setImageY(null)
                                             } else {
                                                 setImageX(0)
                                                 setImageY(0)
@@ -442,8 +442,8 @@ export default function Qrcode() {
                                     excavate: excavateImage,
                                     height: imageHeight,
                                     width: imageWidth,
-                                    x: imageX,
-                                    y: imageY,
+                                    x: imageX !== null ? imageX : undefined,
+                                    y: imageY !== null ? imageY : undefined,
                                 }}
                                 className="my-4 h-[250px] w-[250px]"
                             />
@@ -462,8 +462,8 @@ export default function Qrcode() {
                                     excavate: excavateImage,
                                     height: imageHeight,
                                     width: imageWidth,
-                                    x: imageX,
-                                    y: imageY,
+                                    x: imageX !== null ? imageX : undefined,
+                                    y: imageY !== null ? imageY : undefined,
                                     crossOrigin: "anonymous",
                                 }}
                                 className="my-4 h-[250px] w-[250px] hidden"
@@ -492,7 +492,7 @@ export default function Qrcode() {
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction>Save</AlertDialogAction>
+                                                    <AlertDialogAction onClick={saveQRcode}>Save</AlertDialogAction>
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>
                                         ) : (

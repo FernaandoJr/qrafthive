@@ -38,6 +38,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 import { useState } from "react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
+import Link from "next/link"
 
 const items = [
     {
@@ -76,11 +77,14 @@ export function DashboardSidebar() {
     return (
         <>
             {session?.user ? (
-                <Sidebar>
+                <Sidebar collapsible="icon" className="!text-xl h-screen bg-background shadow-md w-[11rem]">
                     <SidebarHeader>
-                        <SidebarMenuButton>
-                            {(session.user.name?.length ?? 0) > 16 ? session.user.name?.substring(0, 16).trimEnd() + "..." : session.user.name}
-                        </SidebarMenuButton>
+                        <Link href={"/dashboard"}>
+                            <SidebarMenuButton>
+                                <QrCode />
+                                <span>Dashboard</span>
+                            </SidebarMenuButton>
+                        </Link>
                     </SidebarHeader>
                     <SidebarContent>
                         <SidebarGroup>

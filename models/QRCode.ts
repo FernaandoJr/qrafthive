@@ -1,5 +1,7 @@
 import mongoose, { Document, Model, ObjectId, Schema } from "mongoose"
 
+type ErrorLevel = "L" | "M" | "Q" | "H"
+
 interface QRCode extends Document {
     owner: ObjectId
     attributes: {
@@ -8,15 +10,15 @@ interface QRCode extends Document {
         marginSize: number
         fgColor: string
         bgColor: string
-        level: "L" | "M" | "Q" | "H"
+        errorlevel: ErrorLevel
         boostLevel: boolean
         imageSettings: {
             src: string
             excavate: boolean
             height: number
             width: number
-            x: number
-            y: number
+            x: number | null
+            y: number | null
         }
     }
 }
@@ -26,18 +28,18 @@ const QRCodeSchema: Schema<QRCode> = new mongoose.Schema({
     attributes: {
         content: { type: String, required: true },
         size: { type: Number, required: true },
+        errorLevel: { type: String, enum: ["L", "M", "Q", "H"], required: true },
         marginSize: { type: Number, required: true },
+        boostLevel: { type: Boolean, required: true },
         fgColor: { type: String, required: true },
         bgColor: { type: String, required: true },
-        level: { type: String, enum: ["L", "M", "Q", "H"], required: true },
-        boostLevel: { type: Boolean, required: true },
         imageSettings: {
             src: { type: String, required: true },
             excavate: { type: Boolean, required: true },
             height: { type: Number, required: true },
             width: { type: Number, required: true },
-            x: { type: Number, required: true },
-            y: { type: Number, required: true },
+            x: { type: Number, default: null },
+            y: { type: Number, default: null },
         },
     },
 })
