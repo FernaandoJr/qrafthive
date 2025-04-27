@@ -9,10 +9,11 @@ import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react"
 import User from "@/models/User"
 import { Button } from "@/components/ui/button"
-import { Save, Trash2 } from "lucide-react"
+import { Edit, LockKeyhole, RectangleEllipsis, Save, Trash2 } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
 
-const fetchUser = async () => {
-    const response = await fetch("../../../api/user")
+const fetchUser = async (session: { user: { id: string } }): Promise<User> => {
+    const response = await fetch(`../../../api/settings/user?id=${session.user.id}`)
     const data = (await response.json()) as User
     return data
 }
@@ -24,13 +25,15 @@ export default function SettingsPage() {
     const [currentUser, setCurrentUser] = useState<User>()
 
     useEffect(() => {
-        const fetchAndSetUser = async () => {
-            const data = await fetchUser()
-            setCurrentUser(data)
+        if (status === "authenticated") {
+            const fetchAndSetUser = async () => {
+                const data = (await fetchUser(session)) as User
+                setCurrentUser(data)
+                console.log("data", data)
+            }
+            fetchAndSetUser()
         }
-        fetchAndSetUser()
-        console.log(currentUser)
-    }, [])
+    }, [status, session])
 
     if (status === "loading") {
         return (
@@ -54,56 +57,58 @@ export default function SettingsPage() {
             </div>
             <div className="mx-36 p-8 border-border border rounded-xl mt-4">
                 <div className=" flex flex-col gap-4">
+                    <p className="text-xl font-bold">Edit account information</p>
                     <div className="flex place-items-center gap-4">
-                        <Avatar className="hover:opacity-75 transition size-24">
-                            <AvatarImage className=" hover:opacity-75 transition" src={session?.user?.image || undefined} />
+                        <Avatar className="transition size-24">
+                            <AvatarImage className=" transition" src={session?.user?.image || undefined} />
                             <AvatarFallback className="bg-sky-900 text-white select-none text-4xl">{avatarFallback}</AvatarFallback>
                         </Avatar>
-                        <p className="text-2xl">{session?.user.name}</p>
+                        <div className="flex flex-col gap-2">
+                            <Label>Upload image</Label>
+                            <Input type="file" accept="image/*" placeholder="Change Profile Picture" aria-label="Change Profile Picture" />
+                        </div>
                     </div>
 
                     {/* NÃO CONSIGO FAZER A PORRA DO AUTOCOMPLETE OFF fica autocompletando */}
-                    <form className="flex flex-col gap-4" autoComplete="off">
-                        <div>
+                    <form className="flex flex-col gap-4" autoComplete="OFF">
+                        <div className="flex flex-row justify-between">
                             <Label htmlFor="fullname" className="text-normal">
                                 Full Name
                             </Label>
-                            <Input id="fullname" name="fullname" />
+                            <div className="flex flex-row gap-2 place-items-center ">
+                                <Label className="text-muted-foreground">{currentUser?.fullName}</Label>
+                                <Edit className="h-5 w-5 text-muted-foreground hover:text-foreground cursor-pointer" />
+                            </div>
                         </div>
-                        <div>
-                            <Label htmlFor="email" className="text-normal">
-                                Email
+                        <div className="flex flex-row justify-between">
+                            <Label htmlFor="fullname" className="text-normal">
+                                Email Address
                             </Label>
-                            <Input id="email" name="email" type="email" />
+                            <div className="flex flex-row gap-2 place-items-center ">
+                                <Label className="text-muted-foreground">{currentUser?.email}</Label>
+                                <Edit className="h-5 w-5 text-muted-foreground hover:text-foreground cursor-pointer" />
+                            </div>
                         </div>
-                        <div>
-                            <Label htmlFor="current-password" className="text-normal">
-                                Current Password
-                            </Label>
-                            <Input id="current-password" name="current-password" type="password" />
-                        </div>
-                        <div>
-                            <Label htmlFor="new-password" className="text-normal">
-                                New Password
-                            </Label>
-                            <Input id="new-password" name="new-password" type="password" />
-                        </div>
-                        <div>
-                            <Label htmlFor="confirm-new-password" className="text-normal">
-                                Confirm New Password
-                            </Label>
-                            <Input id="confirm-new-password" name="confirm-new-password" type="password" />
-                        </div>
-                        <div className="">
-                            <Button variant={"expandIcon"} Icon={() => <Save className="h-4 w-4" />} iconPlacement="left" type="button">
-                                Save
+
+                        <Separator className="my-4" />
+                        {/* PASSWORD */}
+                        <div className="flex flex-col gap-4">
+                            <p className="text-xl font-bold">Security</p>
+                            <Button
+                                className="w-fit"
+                                variant={"expandIcon"}
+                                Icon={() => <LockKeyhole className="h-4 w-4" />}
+                                iconPlacement="right"
+                                type="button"
+                            >
+                                Change password
                             </Button>
                         </div>
                     </form>
                     <div className="">
                         <Button
                             variant={"expandIcon"}
-                            className="bg-red-600 text-background  hover:bg-red-700"
+                            className="bg-red-600 text-white hover:bg-red-700"
                             Icon={() => <Trash2 className="h-4 w-4" />}
                             iconPlacement="right"
                             type="button"
