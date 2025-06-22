@@ -14,6 +14,7 @@ declare module "next-auth" {
             email: string;
             name: string;
             image: string;
+            birthDate?: Date;
         };
     }
 }
@@ -54,6 +55,7 @@ const handler = NextAuth({
                     id: (user._id as mongoose.Types.ObjectId).toString(),
                     email: user.email,
                     name: user.fullName,
+                    birthDate: user.birthDate,
                 };
             },
         }),
@@ -64,6 +66,9 @@ const handler = NextAuth({
                 token.id = user.id;
                 token.email = user.email;
                 token.name = user.name;
+                if ('birthDate' in user && user.birthDate) {
+                    token.birthDate = user.birthDate;
+                }
             }
             return token;
         },
@@ -75,6 +80,7 @@ const handler = NextAuth({
                     await User.create({
                         fullName: profile?.name,
                         email: profile?.email,
+                        provider: account.provider,
                     })
                 }
             }
@@ -87,6 +93,7 @@ const handler = NextAuth({
                     email: token.email as string,
                     name: token.name as string,
                     image: token.image as string,
+                    birthDate: token.birthDate as Date | undefined,
                 };
             }
             return session;

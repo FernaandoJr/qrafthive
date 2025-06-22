@@ -6,6 +6,7 @@ interface User extends Document {
     password: string
     role: "user" | "admin"
     provider: "manual" | "google" | "github";
+    birthDate?: Date
     createdAt?: Date
     updatedAt?: Date
 }
@@ -25,6 +26,7 @@ const UserSchema: Schema<User> = new mongoose.Schema(
             enum: ["manual", "google", "github"],
             default: "manual",
         },
+        birthDate: { type: Date, required: false },
     },
     {
         versionKey: false,

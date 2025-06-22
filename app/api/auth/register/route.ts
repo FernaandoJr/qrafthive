@@ -1,5 +1,5 @@
 import User from "@/models/User";
-import connectToDatabase from "@/lib/mongoose";
+import connectDB from "@/lib/mongoose";
 import { NextResponse } from "next/server";
 import argon2 from "argon2";
 
@@ -18,14 +18,19 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "Password do not match" }, { status: 400 })
     }
 
-    if (password.lenght < 6) {
-        return NextResponse.json({ message: "Please must be at least 6 carachter long" }, { status: 400 })
+    if (password.length < 6) {
+        return NextResponse.json({ message: "Password must be at least 6 characters long" }, { status: 400 })
     }
 
     try {
 
-        await connectToDatabase();
-
+        const connected = await connectDB();
+        if (!connected) {
+            return NextResponse.json(
+                { message: "Database connection failed" },
+                { status: 500 }
+            );
+        }
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
