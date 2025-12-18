@@ -1,36 +1,135 @@
-# ⚠️ W.I.P. ⚠️ 
+# Turborepo starter
 
-# Product Backlog - Qrafthive
+This Turborepo starter is maintained by the Turborepo core team.
 
-Qrafthive é um aplicativo web que permite a criação de QR Codes personalizados de maneira intuitiva e funcional. O projeto utiliza **Next.js**, **TypeScript** e **MongoDB** como principais tecnologias.
+## Using this example
 
----
+Run the following command:
 
-## Objetivo do Projeto
-Oferecer uma plataforma completa para criação e personalização de QR Codes, expandindo suas utilidades para diferentes cenários, como redes sociais, eventos, chamadas telefônicas e muito mais. 
+```sh
+npx create-turbo@latest
+```
 
----
+## What's inside?
 
-## Backlog do Projeto 
+This Turborepo includes the following packages/apps:
 
-| **Status** | **Categoria**           | **Tarefa**                                                                                                                                                                        | **Descrição**                                                                                                                                         |
-|------------|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ❌         | **Autenticação e Perfil** | Criar sistema de cadastro/login funcional com OAuth                                                                                                                             | Implementar autenticação segura e suporte a provedores como Google e GitHub.                                                                          |
-| ❌         |                          | Desenvolver dashboard para o perfil do usuário                                                                                                                                 | Visualizar QR Codes criados e gerenciar informações do perfil.                                                                                        |
-| ❌         | **Interface do Usuário** | Refazer a navbar                                                                                                                                                                | Criar um design moderno e responsivo, com links para "Dashboard", "Criar QR Code", e "Configurações".                                                 |
-| ❌         |                          | Conectar inputs customizados ao gerador de QR Code                                                                                                                              | Implementar personalização de QR Codes (cores, formatos, tamanhos, logotipos integrados).                                                             |
-| ❌         | **Personalização e Expansão** | Encontrar ou criar um logotipo                                                                                                                                                | Desenvolver uma identidade visual profissional para o projeto.                                                                                        |
-| ❌         |                          | Expandir o suporte para outros tipos de geradores de código                                                                                                                    | Integrar biblioteca [@barcode-bakery/barcode-react](https://www.npmjs.com/package/@barcode-bakery/barcode-react).                                      |
-| ❌         |                          | Explorar novas formas de uso de QR Codes                                                                                                                                       | Ex.: compartilhar tweets, criar postagens no LinkedIn, chamadas telefônicas, gerar eventos. Referências: [TEC-IT](https://barcode.tec-it.com/) e [ZXing](https://zxing.org/). |
-| ❌         | **Futuro Planejado**     | Melhorar acessibilidade e internacionalização (i18n)                                                                                                                            | Tornar o app acessível para usuários com diferentes necessidades e traduzido para outros idiomas.                                                      |
-| ❌         |                          | Criar uma API para desenvolvedores                                                                                                                                              | Oferecer a funcionalidade do Qrafthive como serviço para outros projetos.                                                                             |
+### Apps and Packages
 
----
+- `docs`: a [Next.js](https://nextjs.org/) app
+- `web`: another [Next.js](https://nextjs.org/) app
+- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
+- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
-## Referências
-- [@barcode-bakery/barcode-react](https://www.npmjs.com/package/@barcode-bakery/barcode-react)  
-- [TEC-IT QR Code Generator](https://barcode.tec-it.com/en/MobileQRLinkedInShare?data=https://www.tec-it.com)  
-- [ZXing Decoder](https://zxing.org/w/decode)
-- [vCard](https://en.wikipedia.org/wiki/VCard)
-- [Como fazer esse qrcode](https://stackoverflow.com/questions/70498657/is-it-possible-to-add-form-data-in-qr-code)
+Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
+### Utilities
+
+This Turborepo has some additional tools already setup for you:
+
+- [TypeScript](https://www.typescriptlang.org/) for static type checking
+- [ESLint](https://eslint.org/) for code linting
+- [Prettier](https://prettier.io) for code formatting
+
+### Build
+
+To build all apps and packages, run the following command:
+
+```
+cd my-turborepo
+
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo build
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo build
+yarn dlx turbo build
+pnpm exec turbo build
+```
+
+You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+
+```
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo build --filter=docs
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo build --filter=docs
+yarn exec turbo build --filter=docs
+pnpm exec turbo build --filter=docs
+```
+
+### Develop
+
+To develop all apps and packages, run the following command:
+
+```
+cd my-turborepo
+
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo dev
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo dev
+yarn exec turbo dev
+pnpm exec turbo dev
+```
+
+You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+
+```
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo dev --filter=web
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo dev --filter=web
+yarn exec turbo dev --filter=web
+pnpm exec turbo dev --filter=web
+```
+
+### Remote Caching
+
+> [!TIP]
+> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+
+Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+
+By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+
+```
+cd my-turborepo
+
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo login
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo login
+yarn exec turbo login
+pnpm exec turbo login
+```
+
+This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+
+Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+
+```
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo link
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo link
+yarn exec turbo link
+pnpm exec turbo link
+```
+
+## Useful Links
+
+Learn more about the power of Turborepo:
+
+- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
+- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
+- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
+- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
+- [Configuration Options](https://turborepo.com/docs/reference/configuration)
+- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
