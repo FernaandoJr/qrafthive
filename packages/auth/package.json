@@ -1,0 +1,23 @@
+{
+  "name": "@qrafttt/auth",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "type": "module",
+  "scripts": {},
+  "devDependencies": {
+    "typescript": "catalog:",
+    "@qrafttt/config": "workspace:*"
+  },
+  "dependencies": {
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:",
+    "@qrafttt/db": "workspace:*"
+  }
+}
