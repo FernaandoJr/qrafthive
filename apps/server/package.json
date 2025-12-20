@@ -8,7 +8,8 @@
 	"dependencies": {
 		"@elysiajs/cors": "^0.8.0",
 		"elysia": "latest",
-		"qrcode": "^1.5.3"
+		"qrcode": "^1.5.3",
+		"sharp": "^0.33.5"
 	},
 	"devDependencies": {
 		"bun-types": "latest"

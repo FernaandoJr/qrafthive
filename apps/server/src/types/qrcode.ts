@@ -5,14 +5,13 @@ export enum ErrorCorrectionLevel {
   H = 'H',
 }
 
-export enum OutputType {
-  PNG = 'png',
-  DATA_URL = 'data_url',
-}
-
 export interface IQrcodeRequest {
   data: string;
   errorCorrectionLevel?: ErrorCorrectionLevel;
   width?: number;
-  output?: OutputType;
+  margin?: number;
+  darkColor?: string;
+  lightColor?: string;
+  cornerColor?: string;
+  cornerInnerColor?: string;
 }
