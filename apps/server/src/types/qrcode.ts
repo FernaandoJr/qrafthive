@@ -24,6 +24,10 @@ export interface IQrcodeRequest {
   logoClearRadius?: number;
   // Knockout shape: "rect" (default) or "circle"
   logoClearShape?: 'rect' | 'circle';
-  // Background application: "box" (shape) or "alpha" (mask by logo alpha)
-  logoMaskMode?: 'box' | 'alpha';
+  // Background application: "box" (shape), "alpha" (mask vector), "alphaCell" (por célula do QR)
+  logoMaskMode?: 'box' | 'alpha' | 'alphaCell';
+  // Halo/borda na cor de fundo ao redor da logo
+  logoBorderColor?: string;
+  // Espessura relativa da borda (0–0.2)
+  logoBorderMargin?: number;
 }

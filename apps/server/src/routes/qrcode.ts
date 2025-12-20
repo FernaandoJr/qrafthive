@@ -1,5 +1,6 @@
 import { Elysia, t } from 'elysia';
 import QRCode from 'qrcode';
+import sharp from 'sharp';
 import { ErrorCorrectionLevel, type IQrcodeRequest } from '../types/qrcode';
 
 const schema = t.Object({
@@ -21,8 +22,15 @@ const schema = t.Object({
   logoClearRadius: t.Optional(t.Number({ minimum: 0, maximum: 0.5 })),
   // Shape of the knockout: "rect" (default) or "circle"
   logoClearShape: t.Optional(t.Union([t.Literal('rect'), t.Literal('circle')])),
-  // How the background is applied: "box" (bounding shape) or "alpha" (use logo alpha mask)
-  logoMaskMode: t.Optional(t.Union([t.Literal('box'), t.Literal('alpha')])),
+  // How the background is applied:
+  // "box"  -> forma geométrica
+  // "alpha" -> máscara por pixel (render vetorial)
+  // "alphaCell" -> decisão por célula do QR usando alpha da logo
+  logoMaskMode: t.Optional(t.Union([t.Literal('box'), t.Literal('alpha'), t.Literal('alphaCell')])),
+  // Borda/halo na cor de fundo ao redor da logo (default: lightColor)
+  logoBorderColor: t.Optional(t.String()),
+  // Espessura relativa da borda (0–0.2) aplicada no modo alpha/alphaCell
+  logoBorderMargin: t.Optional(t.Number({ minimum: 0, maximum: 0.2 })),
 });
 
 export const qrcodeRoutes = new Elysia({ prefix: '/qrcode' }).post(
@@ -39,11 +47,14 @@ export const qrcodeRoutes = new Elysia({ prefix: '/qrcode' }).post(
       cornerInnerColor,
       logoUrl,
       logoScale = 0.22,
-      logoClearMargin = 0.08,
+      // Default: slightly larger margin to avoid modules encostando na logo
+      logoClearMargin = 0.12,
       logoBackgroundColor,
       logoClearRadius = 0.12,
       logoClearShape = 'rect',
-      logoMaskMode = 'alpha',
+      logoMaskMode = 'alphaCell',
+      logoBorderColor,
+      logoBorderMargin = 0.02,
     } = body;
 
     const svg = await renderQrSvg({
@@ -62,6 +73,8 @@ export const qrcodeRoutes = new Elysia({ prefix: '/qrcode' }).post(
       logoClearRadius,
       logoClearShape,
       logoMaskMode,
+      logoBorderColor,
+      logoBorderMargin,
     });
 
     return new Response(svg, {
@@ -89,7 +102,9 @@ type RenderOptions = {
   logoBackgroundColor?: string;
   logoClearRadius: number;
   logoClearShape: 'rect' | 'circle';
-  logoMaskMode: 'box' | 'alpha';
+  logoMaskMode: 'box' | 'alpha' | 'alphaCell';
+  logoBorderColor?: string;
+  logoBorderMargin: number;
 };
 
 async function renderQrSvg(options: RenderOptions) {
@@ -109,6 +124,8 @@ async function renderQrSvg(options: RenderOptions) {
     logoClearRadius,
     logoClearShape,
     logoMaskMode,
+    logoBorderColor,
+    logoBorderMargin,
   } = options;
 
   const qr = QRCode.create(data, { errorCorrectionLevel: ecLevel });
@@ -129,6 +146,115 @@ async function renderQrSvg(options: RenderOptions) {
     { fx: count - 7, fy: 0 },
     { fx: 0, fy: count - 7 },
   ];
+
+  // Precompute alpha-based cell mask if needed
+  let shouldSkipCell: ((px: number, py: number) => boolean) | null = null;
+
+  // Fetch logo early if alphaCell mode; reuse buffer later
+  let logoBuffer: Buffer | null = null;
+  let logoMime: string | null = null;
+  if (logoUrl) {
+    const res = await fetch(logoUrl);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch logo: ${res.status} ${res.statusText}`);
+    }
+    logoBuffer = Buffer.from(await res.arrayBuffer());
+    logoMime = res.headers.get('content-type') ?? 'image/png';
+  }
+
+  if (logoUrl && logoMaskMode === 'alphaCell' && logoBuffer) {
+    const logoSizePx = Math.max(16, Math.floor(canvasSize * logoScale));
+    const logoX = (canvasSize - logoSizePx) / 2;
+    const logoY = (canvasSize - logoSizePx) / 2;
+
+    const rendered = await sharp(logoBuffer)
+      .resize(logoSizePx, logoSizePx, {
+        fit: 'contain',
+        background: { r: 0, g: 0, b: 0, alpha: 0 },
+      })
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+
+    const { data: raw, info } = rendered;
+    const stride = info.width * 4;
+    const alphaThreshold = 32; // 0-255
+
+    // Optional small halo using clearMargin (applied as pixel dilation)
+    const haloPx = Math.max(0, Math.floor(logoSizePx * logoClearMargin));
+
+    // Bounding box of opaque pixels (alpha >= threshold) in logo space
+    let minAx = info.width;
+    let maxAx = -1;
+    let minAy = info.height;
+    let maxAy = -1;
+    for (let iy = 0; iy < info.height; iy++) {
+      for (let ix = 0; ix < info.width; ix++) {
+        const alpha = raw[iy * stride + ix * 4 + 3];
+        if (alpha >= alphaThreshold) {
+          if (ix < minAx) minAx = ix;
+          if (ix > maxAx) maxAx = ix;
+          if (iy < minAy) minAy = iy;
+          if (iy > maxAy) maxAy = iy;
+        }
+      }
+    }
+
+    // Fallback if fully transparent (avoid degenerate bounds)
+    if (maxAx < 0 || maxAy < 0) {
+      minAx = 0;
+      minAy = 0;
+      maxAx = info.width - 1;
+      maxAy = info.height - 1;
+    }
+
+    const scaleX = logoSizePx / info.width;
+    const scaleY = logoSizePx / info.height;
+    const maskMinX = logoX + minAx * scaleX - haloPx;
+    const maskMaxX = logoX + (maxAx + 1) * scaleX + haloPx;
+    const maskMinY = logoY + minAy * scaleY - haloPx;
+    const maskMaxY = logoY + (maxAy + 1) * scaleY + haloPx;
+
+    shouldSkipCell = (px: number, py: number) => {
+      const cellMinX = px;
+      const cellMaxX = px + cellSize;
+      const cellMinY = py;
+      const cellMaxY = py + cellSize;
+
+      // quick reject if the cell box is fully outside opaque-mask+halo box
+      if (cellMaxX < maskMinX || cellMinX > maskMaxX) return false;
+      if (cellMaxY < maskMinY || cellMinY > maskMaxY) return false;
+
+      const samples = Math.max(3, Math.min(6, Math.floor(cellSize / 2)));
+      let covered = 0;
+      let total = 0;
+      let maxAlpha = 0;
+
+      for (let sy = 0; sy < samples; sy++) {
+        for (let sx = 0; sx < samples; sx++) {
+          const spx = cellMinX + (sx + 0.5) * (cellSize / samples);
+          const spy = cellMinY + (sy + 0.5) * (cellSize / samples);
+          total++;
+
+          // outside opaque-mask+halo
+          if (spx < maskMinX || spx > maskMaxX || spy < maskMinY || spy > maskMaxY) continue;
+
+          const ix = Math.floor((spx - logoX) * (info.width / logoSizePx));
+          const iy = Math.floor((spy - logoY) * (info.height / logoSizePx));
+
+          if (ix >= 0 && iy >= 0 && ix < info.width && iy < info.height) {
+            const alpha = raw[iy * stride + ix * 4 + 3];
+            if (alpha >= alphaThreshold) covered++;
+            if (alpha > maxAlpha) maxAlpha = alpha;
+          }
+        }
+      }
+
+      const coverage = covered / total;
+      // Drop cell if any strong alpha or sufficient coverage
+      return maxAlpha >= alphaThreshold || coverage >= 0.35;
+    };
+  }
 
   for (let y = 0; y < count; y++) {
     for (let x = 0; x < count; x++) {
@@ -154,21 +280,25 @@ async function renderQrSvg(options: RenderOptions) {
       const px = (x + margin) * cellSize;
       const py = (y + margin) * cellSize;
 
-      // Skip cells only when using box mode (alpha mode keeps modules and masks them later)
-      if (logoUrl && logoMaskMode === 'box') {
-        if (
-          shouldClearForLogo(
-            px,
-            py,
-            cellSize,
-            logoClearMargin,
-            size,
-            margin,
-            logoScale,
-            logoClearShape,
-            logoClearRadius,
-          )
-        ) {
+      // Skip cells in box mode or alphaCell mask
+      if (logoUrl) {
+        if (logoMaskMode === 'box') {
+          if (
+            shouldClearForLogo(
+              px,
+              py,
+              cellSize,
+              logoClearMargin,
+              size,
+              margin,
+              logoScale,
+              logoClearShape,
+              logoClearRadius,
+            )
+          ) {
+            continue;
+          }
+        } else if (logoMaskMode === 'alphaCell' && shouldSkipCell && shouldSkipCell(px, py)) {
           continue;
         }
       }
@@ -182,7 +312,7 @@ async function renderQrSvg(options: RenderOptions) {
   let logoFragment = '';
   let clearFragment = '';
   let defsFragment = '';
-  if (logoUrl) {
+  if (logoUrl && logoBuffer && logoMime) {
     const logoSize = Math.max(16, Math.floor(canvasSize * logoScale));
     const logoX = (canvasSize - logoSize) / 2;
     const logoY = (canvasSize - logoSize) / 2;
@@ -192,14 +322,8 @@ async function renderQrSvg(options: RenderOptions) {
     const clearX = logoX - clearMarginPx;
     const clearY = logoY - clearMarginPx;
     const clearSize = logoSize + clearMarginPx * 2;
-    const res = await fetch(logoUrl);
-    if (!res.ok) {
-      throw new Error(`Failed to fetch logo: ${res.status} ${res.statusText}`);
-    }
-    const buf = Buffer.from(await res.arrayBuffer());
-    const mime = res.headers.get('content-type') ?? 'image/png';
-    const base64 = buf.toString('base64');
-    const dataHref = `data:${mime};base64,${base64}`;
+    const base64 = logoBuffer.toString('base64');
+    const dataHref = `data:${logoMime};base64,${base64}`;
 
     if (logoMaskMode === 'alpha') {
       const haloPx = Math.max(0, Math.floor(logoSize * logoClearMargin));
@@ -217,6 +341,26 @@ async function renderQrSvg(options: RenderOptions) {
       const clearFill =
         logoBackgroundColor === 'transparent' ? 'none' : logoBackgroundColor || lightColor;
       clearFragment = `<rect x="0" y="0" width="${canvasSize}" height="${canvasSize}" fill="${clearFill}" mask="url(#${maskId})" />`;
+    } else if (logoMaskMode === 'alphaCell') {
+      // Desenhe uma borda fina na cor de fundo usando a máscara alpha com dilatação pequena
+      const borderHaloPx = Math.max(0, Math.floor(logoSize * logoBorderMargin));
+      if (borderHaloPx > 0 || logoBorderColor) {
+        const filterId = `logo-dilate-${Math.random().toString(36).slice(2, 8)}`;
+        const maskId = `logo-mask-${Math.random().toString(36).slice(2, 8)}`;
+        defsFragment += `<defs>
+          <filter id="${filterId}" x="0" y="0" width="200%" height="200%" filterUnits="userSpaceOnUse">
+            <feMorphology in="SourceGraphic" operator="dilate" radius="${borderHaloPx}" result="dilate" />
+          </filter>
+          <mask id="${maskId}" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" style="mask-type:alpha">
+            <image href="${dataHref}" x="${logoX}" y="${logoY}" width="${logoSize}" height="${logoSize}" preserveAspectRatio="xMidYMid meet" filter="url(#${filterId})" />
+          </mask>
+        </defs>`;
+        const borderFill =
+          logoBorderColor === 'transparent'
+            ? 'none'
+            : logoBorderColor || logoBackgroundColor || lightColor;
+        clearFragment += `<rect x="0" y="0" width="${canvasSize}" height="${canvasSize}" fill="${borderFill}" mask="url(#${maskId})" />`;
+      }
     } else {
       const clearRadius = Math.max(0, Math.floor(clearSize * logoClearRadius));
       const clearFill =
