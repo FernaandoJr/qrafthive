@@ -14,4 +14,6 @@ export interface IQrcodeRequest {
   lightColor?: string;
   cornerColor?: string;
   cornerInnerColor?: string;
+  logoUrl?: string;
+  logoScale?: number;
 }

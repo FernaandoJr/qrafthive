@@ -11,6 +11,8 @@ const schema = t.Object({
   lightColor: t.Optional(t.String()),
   cornerColor: t.Optional(t.String()),
   cornerInnerColor: t.Optional(t.String()),
+  logoUrl: t.Optional(t.String({ format: 'url' })),
+  logoScale: t.Optional(t.Number({ minimum: 0.05, maximum: 0.4 })),
 });
 
 export const qrcodeRoutes = new Elysia({ prefix: '/qrcode' }).post(
@@ -25,6 +27,8 @@ export const qrcodeRoutes = new Elysia({ prefix: '/qrcode' }).post(
       lightColor = '#ffffff',
       cornerColor,
       cornerInnerColor,
+      logoUrl,
+      logoScale = 0.22,
     } = body;
 
     const svg = await renderQrSvg({
@@ -36,6 +40,8 @@ export const qrcodeRoutes = new Elysia({ prefix: '/qrcode' }).post(
       lightColor,
       cornerColor,
       cornerInnerColor,
+      logoUrl,
+      logoScale,
     });
 
     return new Response(svg, {
@@ -57,11 +63,23 @@ type RenderOptions = {
   lightColor: string;
   cornerColor?: string;
   cornerInnerColor?: string;
+  logoUrl?: string;
+  logoScale: number;
 };
 
 async function renderQrSvg(options: RenderOptions) {
-  const { data, ecLevel, size, margin, darkColor, lightColor, cornerColor, cornerInnerColor } =
-    options;
+  const {
+    data,
+    ecLevel,
+    size,
+    margin,
+    darkColor,
+    lightColor,
+    cornerColor,
+    cornerInnerColor,
+    logoUrl,
+    logoScale,
+  } = options;
 
   const qr = QRCode.create(data, { errorCorrectionLevel: ecLevel });
   const modules = qr.modules;
@@ -112,7 +130,25 @@ async function renderQrSvg(options: RenderOptions) {
     }
   }
 
+  let logoFragment = '';
+  if (logoUrl) {
+    const logoSize = Math.max(16, Math.floor(canvasSize * logoScale));
+    const logoX = (canvasSize - logoSize) / 2;
+    const logoY = (canvasSize - logoSize) / 2;
+
+    const res = await fetch(logoUrl);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch logo: ${res.status} ${res.statusText}`);
+    }
+    const buf = Buffer.from(await res.arrayBuffer());
+    const mime = res.headers.get('content-type') ?? 'image/png';
+    const base64 = buf.toString('base64');
+    const dataHref = `data:${mime};base64,${base64}`;
+
+    logoFragment = `<image href="${dataHref}" x="${logoX}" y="${logoY}" width="${logoSize}" height="${logoSize}" preserveAspectRatio="xMidYMid meet" />`;
+  }
+
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${canvasSize}" height="${canvasSize}" viewBox="0 0 ${canvasSize} ${canvasSize}" shape-rendering="crispEdges" role="img">${rects.join(
     '',
-  )}</svg>`;
+  )}${logoFragment}</svg>`;
 }
