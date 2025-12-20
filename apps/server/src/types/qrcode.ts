@@ -15,19 +15,14 @@ export interface IQrcodeRequest {
   cornerColor?: string;
   cornerInnerColor?: string;
   logoUrl?: string;
+  // Escala 0–10 (10 equivale à escala antiga 0.4 do canvas)
   logoScale?: number;
-  // Extra margin (0–0.3) around the logo to clear QR modules
-  logoClearMargin?: number;
+  // Gap radial: 0–10 (10 equivale ao antigo 0.5)
+  logoMinDistance?: number;
   // Background behind the logo; use "transparent" to avoid a solid box
   logoBackgroundColor?: string;
-  // Corner radius factor (0–0.5) for the knockout box
-  logoClearRadius?: number;
-  // Knockout shape: "rect" (default) or "circle"
-  logoClearShape?: 'rect' | 'circle';
   // Background application: "box" (shape), "alpha" (mask vector), "alphaCell" (por célula do QR)
   logoMaskMode?: 'box' | 'alpha' | 'alphaCell';
-  // Halo/borda na cor de fundo ao redor da logo
-  logoBorderColor?: string;
-  // Espessura relativa da borda (0–0.2)
+  // Borda: 0–10 (10 equivale ao antigo 0.2)
   logoBorderMargin?: number;
 }
