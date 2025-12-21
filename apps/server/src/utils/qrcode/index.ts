@@ -1,4 +1,4 @@
-export { qrcodeSchema } from './schema';
-export type { RenderOptions } from './render';
-export { renderQrSvg } from './render';
-
+export * from './buildRoundedPath';
+export * from './makeBoxForLogo';
+export * from './render';
+export * from './schema';
