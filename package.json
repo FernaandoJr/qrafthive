@@ -14,13 +14,9 @@
     "prettier": "^3.7.4",
     "turbo": "^2.6.3",
     "typescript": "5.9.2"
-  },
+  }, 
+  "packageManager": "pnpm@9.0.0",
   "engines": {
     "node": ">=18"
-  },
-  "packageManager": "bun@1.2.18",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  }
 }

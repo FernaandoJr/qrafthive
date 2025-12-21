@@ -11,7 +11,9 @@
     "elysia": "latest"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+		"@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*"
   },
   "module": "src/index.js"
 }
