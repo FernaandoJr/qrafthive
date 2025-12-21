@@ -115,7 +115,7 @@ export async function renderQrSvg(options: IQrcodeRequest) {
     for (let iy = 0; iy < info.height; iy++) {
       for (let ix = 0; ix < info.width; ix++) {
         const alpha = raw[iy * stride + ix * 4 + 3];
-        if (alpha >= alphaThreshold) {
+        if (alpha && alpha >= alphaThreshold) {
           if (ix < minAx) minAx = ix;
           if (ix > maxAx) maxAx = ix;
           if (iy < minAy) minAy = iy;
@@ -178,7 +178,7 @@ export async function renderQrSvg(options: IQrcodeRequest) {
 
           if (ix >= 0 && iy >= 0 && ix < info.width && iy < info.height) {
             const alpha = raw[iy * stride + ix * 4 + 3];
-            if (alpha > maxAlpha) maxAlpha = alpha;
+            if (alpha && alpha > maxAlpha) maxAlpha = alpha;
             if (maxAlpha >= alphaThreshold) return true; // drop cell as soon as we see opacity
           }
         }
