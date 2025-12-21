@@ -21,7 +21,6 @@ export async function renderQrSvg(options: IQrcodeRequest) {
 
   // Clamp logo scale so it never covers the whole canvas (35% max)
   const normalizedLogoScale = Math.min(0.35, Math.max(0, logo?.scale ?? 0) * 0.04);
-  const normalizedLogoMinDistance = Math.max(0, Math.min(logo?.minDistance ?? 0, 10)) * 0.05;
   const normalizedLogoBorderMargin = Math.max(0, Math.min(logo?.borderMargin ?? 0, 10)) * 0.02;
   const qr = QRCode.create(data, { errorCorrectionLevel });
   const modules = qr.modules;
@@ -65,13 +64,7 @@ export async function renderQrSvg(options: IQrcodeRequest) {
       logoHeightPx = base;
     }
   }
-  const extraGapPx =
-    logo?.maskMode === LogoMaskModeEnum.alphaCell &&
-    logoWidthPx !== null &&
-    logoHeightPx !== null &&
-    normalizedLogoMinDistance > 0
-      ? Math.max(0, Math.floor(Math.min(logoWidthPx, logoHeightPx) * normalizedLogoMinDistance))
-      : 0;
+  const extraGapPx = 0;
   const logoX = logoWidthPx !== null ? (canvasSize - logoWidthPx) / 2 : null;
   const logoY = logoHeightPx !== null ? (canvasSize - logoHeightPx) / 2 : null;
   let clearBox: { x: number; y: number; w: number; h: number } | null = null;
