@@ -320,8 +320,7 @@ export async function renderQrSvg(options: IQrcodeRequest) {
       const boxY = logoY - borderHaloPx;
       const boxW = logoWidth + borderHaloPx * 2;
       const boxH = logoHeight + borderHaloPx * 2;
-      const clearFill =
-        logo.backgroundColor === 'transparent' ? 'none' : logo.backgroundColor || lightColor;
+      const clearFill = lightColor;
       clearFragment = `<rect x="${boxX}" y="${boxY}" width="${boxW}" height="${boxH}" fill="${clearFill}" />`;
     }
 

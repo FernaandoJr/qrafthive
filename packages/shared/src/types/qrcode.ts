@@ -31,7 +31,6 @@ export interface IQrcodeRequest {
   logo?: {
     url: string;
     scale: number;
-    backgroundColor: string;
     maskMode: LogoMaskModeEnum;
     borderMargin: number;
   };

@@ -15,7 +15,6 @@ export const qrcodeSchema = t.Object({
     t.Object({
       url: t.String({ format: 'url' }),
       scale: t.Number({ minimum: 0 }),
-      backgroundColor: t.String(),
       maskMode: t.Enum(LogoMaskModeEnum),
       borderMargin: t.Number({ minimum: 0, maximum: 10 }),
     }),
