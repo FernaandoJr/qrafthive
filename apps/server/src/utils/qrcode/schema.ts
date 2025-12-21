@@ -11,9 +11,18 @@ export const qrcodeSchema = t.Object({
   cornerColor: t.Optional(t.String()),
   cornerInnerColor: t.Optional(t.String()),
   logoUrl: t.Optional(t.String({ format: 'url' })),
-  logoScale: t.Optional(t.Number({ minimum: 0, maximum: 10 })),
+  logoScale: t.Optional(t.Number({ minimum: 0 })),
   logoMinDistance: t.Optional(t.Number({ minimum: 0, maximum: 10 })),
   logoBackgroundColor: t.Optional(t.String()),
   logoMaskMode: t.Optional(t.Union([t.Literal('box'), t.Literal('alpha'), t.Literal('alphaCell')])),
   logoBorderMargin: t.Optional(t.Number({ minimum: 0, maximum: 10 })),
+  moduleShape: t.Optional(
+    t.Union([
+      t.Literal('square'),
+      t.Literal('circle'),
+      t.Literal('diamond'),
+      t.Literal('rounded'),
+      t.Literal('outlined'),
+    ]),
+  ),
 });

@@ -20,6 +20,7 @@ export const qrcodeRoutes = new Elysia({ prefix: '/qrcode' }).post(
       logoBackgroundColor = 'transparent',
       logoMaskMode = 'alphaCell',
       logoBorderMargin = 1, // equivale a ~0.02 após normalização
+      moduleShape = 'square',
     } = body;
 
     const svg = await renderQrSvg({
@@ -29,14 +30,15 @@ export const qrcodeRoutes = new Elysia({ prefix: '/qrcode' }).post(
       margin,
       darkColor,
       lightColor,
-      cornerColor,
-      cornerInnerColor,
+      cornerColor: cornerColor ?? darkColor,
+      cornerInnerColor: cornerInnerColor ?? darkColor,
       logoUrl,
       logoScale,
       logoMinDistance,
       logoBackgroundColor,
       logoMaskMode,
       logoBorderMargin,
+      moduleShape,
     });
 
     return new Response(svg, {

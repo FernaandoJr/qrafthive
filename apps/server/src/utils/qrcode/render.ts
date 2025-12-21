@@ -1,6 +1,6 @@
 import QRCode from 'qrcode';
 import sharp from 'sharp';
-import { ErrorCorrectionLevel } from '../../types/qrcode';
+import { ErrorCorrectionLevel, ModuleShape } from '../../types/qrcode';
 
 export type RenderOptions = {
   data: string;
@@ -17,6 +17,7 @@ export type RenderOptions = {
   logoBackgroundColor?: string;
   logoMaskMode: 'box' | 'alpha' | 'alphaCell';
   logoBorderMargin: number;
+  moduleShape?: ModuleShape;
 };
 
 export async function renderQrSvg(options: RenderOptions) {
@@ -35,14 +36,22 @@ export async function renderQrSvg(options: RenderOptions) {
     logoBackgroundColor,
     logoMaskMode,
     logoBorderMargin,
+    moduleShape = 'square',
   } = options;
 
-  // Map input scale 0–10 so that 10 -> 0.4 (legacy max), preserving floats
-  const normalizedLogoScale = Math.max(0, Math.min(logoScale, 10)) * 0.04;
-  // Map minDistance 0–10 so that 10 -> 0.5 (legacy max)
+  const normalizedLogoScale = Math.max(0, logoScale) * 0.04;
   const normalizedLogoMinDistance = Math.max(0, Math.min(logoMinDistance, 10)) * 0.05;
-  // Map border margin 0–10 so that 10 -> 0.2 (legacy max)
   const normalizedLogoBorderMargin = Math.max(0, Math.min(logoBorderMargin, 10)) * 0.02;
+
+  const hasLogo = Boolean(logoUrl);
+  const useBoxMask = logoMaskMode === 'box';
+  const useAlphaMask = logoMaskMode === 'alpha';
+  const useAlphaCellMask = logoMaskMode === 'alphaCell';
+  const logoUrlValue = logoUrl ?? '';
+  const isCircleShape = moduleShape === 'circle';
+  const isDiamondShape = moduleShape === 'diamond';
+  const isRoundedShape = moduleShape === 'rounded';
+  const isOutlinedShape = moduleShape === 'outlined';
 
   const qr = QRCode.create(data, { errorCorrectionLevel: ecLevel });
   const modules = qr.modules;
@@ -56,12 +65,7 @@ export async function renderQrSvg(options: RenderOptions) {
   // Background
   rects.push(`<rect width="${canvasSize}" height="${canvasSize}" fill="${lightColor}" />`);
 
-  // Finder origins
-  const finderTopLeft = [
-    { fx: 0, fy: 0 },
-    { fx: count - 7, fy: 0 },
-    { fx: 0, fy: count - 7 },
-  ];
+  const finderEnd = count - 7;
 
   // Precompute alpha-based cell mask if needed
   let shouldSkipCell: ((px: number, py: number) => boolean) | null = null;
@@ -69,8 +73,8 @@ export async function renderQrSvg(options: RenderOptions) {
   // Fetch logo early if alphaCell mode; reuse buffer later
   let logoBuffer: Buffer | null = null;
   let logoMime: string | null = null;
-  if (logoUrl) {
-    const res = await fetch(logoUrl);
+  if (hasLogo) {
+    const res = await fetch(logoUrlValue);
     if (!res.ok) {
       throw new Error(`Failed to fetch logo: ${res.status} ${res.statusText}`);
     }
@@ -81,7 +85,7 @@ export async function renderQrSvg(options: RenderOptions) {
   // Logo sizing with aspect ratio preserved (after logoBuffer is available)
   let logoWidthPx: number | null = null;
   let logoHeightPx: number | null = null;
-  if (logoUrl) {
+  if (hasLogo) {
     const base = Math.max(16, Math.floor(canvasSize * normalizedLogoScale));
     const meta = logoBuffer ? await sharp(logoBuffer).metadata() : null;
     const mw = meta?.width;
@@ -100,7 +104,6 @@ export async function renderQrSvg(options: RenderOptions) {
       logoHeightPx = base;
     }
   }
-  const logoCenter = canvasSize / 2;
   const extraGapPx =
     logoWidthPx !== null && logoHeightPx !== null && normalizedLogoMinDistance > 0
       ? Math.max(0, Math.floor(Math.min(logoWidthPx, logoHeightPx) * normalizedLogoMinDistance))
@@ -120,8 +123,8 @@ export async function renderQrSvg(options: RenderOptions) {
   }
 
   if (
-    logoUrl &&
-    logoMaskMode === 'alphaCell' &&
+    hasLogo &&
+    useAlphaCellMask &&
     logoBuffer &&
     logoWidthPx &&
     logoHeightPx &&
@@ -186,6 +189,10 @@ export async function renderQrSvg(options: RenderOptions) {
       h: opaqueH + extraGapPx * 2,
     };
 
+    const alphaSamples = Math.max(3, Math.min(6, Math.floor(cellSize / 2)));
+    const alphaStep = cellSize / alphaSamples;
+    const alphaHalfStep = alphaStep / 2;
+
     shouldSkipCell = (px: number, py: number) => {
       const cellMinX = px;
       const cellMaxX = px + cellSize;
@@ -196,13 +203,12 @@ export async function renderQrSvg(options: RenderOptions) {
       if (cellMaxX < maskMinX || cellMinX > maskMaxX) return false;
       if (cellMaxY < maskMinY || cellMinY > maskMaxY) return false;
 
-      const samples = Math.max(3, Math.min(6, Math.floor(cellSize / 2)));
       let maxAlpha = 0;
 
-      for (let sy = 0; sy < samples; sy++) {
-        for (let sx = 0; sx < samples; sx++) {
-          const spx = cellMinX + (sx + 0.5) * (cellSize / samples);
-          const spy = cellMinY + (sy + 0.5) * (cellSize / samples);
+      for (let sy = 0; sy < alphaSamples; sy++) {
+        const spy = cellMinY + sy * alphaStep + alphaHalfStep;
+        for (let sx = 0; sx < alphaSamples; sx++) {
+          const spx = cellMinX + sx * alphaStep + alphaHalfStep;
 
           // outside opaque-mask+halo
           if (spx < maskMinX || spx > maskMaxX || spy < maskMinY || spy > maskMaxY) continue;
@@ -226,18 +232,30 @@ export async function renderQrSvg(options: RenderOptions) {
   }
 
   for (let y = 0; y < count; y++) {
+    const inTopBand = y < 7;
+    const inBottomBand = y >= finderEnd;
     for (let x = 0; x < count; x++) {
       if (!modules.get(x, y)) continue;
 
       let fill = darkColor;
 
-      const finder = finderTopLeft.find(
-        ({ fx, fy }) => x >= fx && x < fx + 7 && y >= fy && y < fy + 7,
-      );
+      const inLeftBand = x < 7;
+      const inRightBand = x >= finderEnd;
+      const inTopLeft = inLeftBand && inTopBand;
+      const inTopRight = inRightBand && inTopBand;
+      const inBottomLeft = inLeftBand && inBottomBand;
 
-      if (finder) {
+      if (inTopLeft || inTopRight || inBottomLeft) {
+        const innerRangeStartX = inLeftBand ? 2 : finderEnd + 2;
+        const innerRangeEndX = inLeftBand ? 4 : finderEnd + 4;
+        const innerRangeStartY = inTopBand ? 2 : finderEnd + 2;
+        const innerRangeEndY = inTopBand ? 4 : finderEnd + 4;
+
         const isInner =
-          x >= finder.fx + 2 && x <= finder.fx + 4 && y >= finder.fy + 2 && y <= finder.fy + 4;
+          x >= innerRangeStartX &&
+          x <= innerRangeEndX &&
+          y >= innerRangeStartY &&
+          y <= innerRangeEndY;
 
         if (isInner && cornerInnerColor) {
           fill = cornerInnerColor;
@@ -248,11 +266,11 @@ export async function renderQrSvg(options: RenderOptions) {
 
       const px = (x + margin) * cellSize;
       const py = (y + margin) * cellSize;
+      const cellCx = px + cellSize / 2;
+      const cellCy = py + cellSize / 2;
 
       // Hard knockout using logo bounding box + clearMargin
       if (clearBox) {
-        const cellCx = px + cellSize / 2;
-        const cellCy = py + cellSize / 2;
         if (
           cellCx >= clearBox.x &&
           cellCx <= clearBox.x + clearBox.w &&
@@ -264,26 +282,55 @@ export async function renderQrSvg(options: RenderOptions) {
       }
 
       // Skip cells in box mode or alphaCell mask
-      if (logoUrl) {
-        if (logoMaskMode === 'box') {
+      if (hasLogo) {
+        if (useBoxMask) {
           if (shouldClearForLogo(px, py, cellSize, size, normalizedLogoScale)) {
             continue;
           }
-        } else if (logoMaskMode === 'alphaCell' && shouldSkipCell && shouldSkipCell(px, py)) {
+        } else if (useAlphaCellMask && shouldSkipCell && shouldSkipCell(px, py)) {
           continue;
         }
       }
 
-      rects.push(
-        `<rect x="${px}" y="${py}" width="${cellSize}" height="${cellSize}" fill="${fill}" />`,
-      );
+      if (isCircleShape) {
+        const r = cellSize / 2;
+        rects.push(`<circle cx="${cellCx}" cy="${cellCy}" r="${r}" fill="${fill}" />`);
+      } else if (isDiamondShape) {
+        const r = cellSize / 2;
+        rects.push(
+          `<path d="M ${cellCx} ${cellCy - r} L ${cellCx + r} ${cellCy} L ${cellCx} ${cellCy + r} L ${cellCx - r} ${cellCy} Z" fill="${fill}" />`,
+        );
+      } else if (isRoundedShape) {
+        const n = y > 0 && modules.get(x, y - 1);
+        const s = y + 1 < count && modules.get(x, y + 1);
+        const w = x > 0 && modules.get(x - 1, y);
+        const e = x + 1 < count && modules.get(x + 1, y);
+        const r = Math.min(cellSize / 2, Math.floor(cellSize * 0.45));
+
+        const tl = !n && !w ? r : 0;
+        const tr = !n && !e ? r : 0;
+        const br = !s && !e ? r : 0;
+        const bl = !s && !w ? r : 0;
+
+        const d = buildRoundedRectPath(px, py, cellSize, { tl, tr, br, bl });
+        rects.push(`<path d="${d}" fill="${fill}" />`);
+      } else if (isOutlinedShape) {
+        const strokeWidth = Math.max(1, Math.floor(cellSize * 0.18));
+        rects.push(
+          `<rect x="${px}" y="${py}" width="${cellSize}" height="${cellSize}" fill="${fill}" stroke="${lightColor}" stroke-width="${strokeWidth}" />`,
+        );
+      } else {
+        rects.push(
+          `<rect x="${px}" y="${py}" width="${cellSize}" height="${cellSize}" fill="${fill}" />`,
+        );
+      }
     }
   }
 
   let logoFragment = '';
   let clearFragment = '';
   let defsFragment = '';
-  if (logoUrl && logoBuffer && logoMime) {
+  if (hasLogo && logoBuffer && logoMime) {
     const logoWidth = logoWidthPx ?? Math.max(16, Math.floor(canvasSize * normalizedLogoScale));
     const logoHeight = logoHeightPx ?? logoWidth;
     const logoX = (canvasSize - logoWidth) / 2;
@@ -298,10 +345,11 @@ export async function renderQrSvg(options: RenderOptions) {
     const base64 = logoBuffer.toString('base64');
     const dataHref = `data:${logoMime};base64,${base64}`;
 
-    if (logoMaskMode === 'alpha') {
+    if (useAlphaMask) {
+      const logoIdBase = hashId(`${logoUrlValue}-${canvasSize}-${logoWidth}-${logoHeight}`);
       const haloPx = 0;
-      const filterId = `logo-dilate-${Math.random().toString(36).slice(2, 8)}`;
-      const maskId = `logo-mask-${Math.random().toString(36).slice(2, 8)}`;
+      const filterId = `logo-dilate-${logoIdBase}`;
+      const maskId = `logo-mask-${logoIdBase}`;
       defsFragment = `<defs>
         <filter id="${filterId}" x="0" y="0" width="200%" height="200%" filterUnits="userSpaceOnUse">
           <feMorphology in="SourceGraphic" operator="dilate" radius="${haloPx}" result="dilate" />
@@ -314,15 +362,18 @@ export async function renderQrSvg(options: RenderOptions) {
       const clearFill =
         logoBackgroundColor === 'transparent' ? 'none' : logoBackgroundColor || lightColor;
       clearFragment = `<rect x="0" y="0" width="${canvasSize}" height="${canvasSize}" fill="${clearFill}" mask="url(#${maskId})" />`;
-    } else if (logoMaskMode === 'alphaCell') {
+    } else if (useAlphaCellMask) {
       // Desenhe uma borda fina na cor de fundo usando a máscara alpha com dilatação pequena
       const borderHaloPx = Math.max(
         0,
         Math.floor(Math.max(logoWidth, logoHeight) * normalizedLogoBorderMargin),
       );
       if (borderHaloPx > 0) {
-        const filterId = `logo-dilate-${Math.random().toString(36).slice(2, 8)}`;
-        const maskId = `logo-mask-${Math.random().toString(36).slice(2, 8)}`;
+        const logoIdBase = hashId(
+          `${logoUrlValue}-${canvasSize}-${logoWidth}-${logoHeight}-alphaCell-${borderHaloPx}`,
+        );
+        const filterId = `logo-dilate-${logoIdBase}`;
+        const maskId = `logo-mask-${logoIdBase}`;
         defsFragment += `<defs>
           <filter id="${filterId}" x="0" y="0" width="200%" height="200%" filterUnits="userSpaceOnUse">
             <feMorphology in="SourceGraphic" operator="dilate" radius="${borderHaloPx}" result="dilate" />
@@ -348,6 +399,38 @@ export async function renderQrSvg(options: RenderOptions) {
   )}${defsFragment}${clearFragment}${logoFragment}</svg>`;
 }
 
+function hashId(value: string) {
+  let hash = 0;
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash << 5) - hash + value.charCodeAt(i);
+    hash |= 0; // keep 32-bit
+  }
+  return Math.abs(hash).toString(36);
+}
+
+function buildRoundedRectPath(
+  x: number,
+  y: number,
+  size: number,
+  radii: { tl: number; tr: number; br: number; bl: number },
+) {
+  const { tl, tr, br, bl } = radii;
+  const x2 = x + size;
+  const y2 = y + size;
+  return [
+    `M ${x + tl} ${y}`,
+    `L ${x2 - tr} ${y}`,
+    tr ? `Q ${x2} ${y} ${x2} ${y + tr}` : `L ${x2} ${y}`,
+    `L ${x2} ${y2 - br}`,
+    br ? `Q ${x2} ${y2} ${x2 - br} ${y2}` : `L ${x2} ${y2}`,
+    `L ${x + bl} ${y2}`,
+    bl ? `Q ${x} ${y2} ${x} ${y2 - bl}` : `L ${x} ${y2}`,
+    `L ${x} ${y + tl}`,
+    tl ? `Q ${x} ${y} ${x + tl} ${y}` : `L ${x} ${y}`,
+    'Z',
+  ].join(' ');
+}
+
 function shouldClearForLogo(
   px: number,
   py: number,
@@ -362,9 +445,6 @@ function shouldClearForLogo(
   const clearSize = logoSize + clearMarginPx * 2;
   const clearX = logoX - clearMarginPx;
   const clearY = logoY - clearMarginPx;
-
-  const cellCenterX = px + cellSize / 2;
-  const cellCenterY = py + cellSize / 2;
 
   // Rect (bounding-box check; radius not needed for exclusion)
   const cellX2 = px + cellSize;

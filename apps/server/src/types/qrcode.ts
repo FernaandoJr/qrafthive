@@ -5,6 +5,8 @@ export enum ErrorCorrectionLevel {
   H = 'H',
 }
 
+export type ModuleShape = 'square' | 'circle' | 'diamond' | 'rounded' | 'outlined';
+
 export interface IQrcodeRequest {
   data: string;
   errorCorrectionLevel?: ErrorCorrectionLevel;
@@ -25,4 +27,6 @@ export interface IQrcodeRequest {
   logoMaskMode?: 'box' | 'alpha' | 'alphaCell';
   // Borda: 0–10 (10 equivale ao antigo 0.2)
   logoBorderMargin?: number;
+  // Forma dos módulos: square (padrão), circle, diamond
+  moduleShape?: ModuleShape;
 }
