@@ -1,18 +1,19 @@
 {
-	"name": "server",
-	"version": "1.0.50",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "bun run --watch src/index.ts"
-	},
-	"dependencies": {
-		"@elysiajs/cors": "^0.8.0",
-		"elysia": "latest",
-		"qrcode": "^1.5.3",
-		"sharp": "^0.33.5"
-	},
-	"devDependencies": {
-		"bun-types": "latest"
-	},
-	"module": "src/index.js"
+  "name": "server",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "@repo/shared": "workspace:*",
+    "@elysiajs/cors": "^0.8.0",
+    "elysia": "latest",
+    "qrcode": "^1.5.3",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "module": "src/index.js"
 }

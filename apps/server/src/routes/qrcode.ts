@@ -1,6 +1,5 @@
+import { IQrcodeRequest, qrcodeSchema, renderQrSvg } from '@repo/shared';
 import { Elysia } from 'elysia';
-import { type IQrcodeRequest } from '../types/qrcode';
-import { qrcodeSchema, renderQrSvg } from '../utils/qrcode';
 
 export const qrcodeRoutes = new Elysia({ prefix: '/qrcode' }).post(
   '/',

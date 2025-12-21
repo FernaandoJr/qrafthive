@@ -18,6 +18,7 @@
       "version": "1.0.50",
       "dependencies": {
         "@elysiajs/cors": "^0.8.0",
+        "@repo/shared": "workspace:*",
         "elysia": "latest",
         "qrcode": "^1.5.3",
         "sharp": "^0.33.5",
@@ -60,6 +61,26 @@
         "globals": "^16.5.0",
         "typescript": "^5.9.2",
         "typescript-eslint": "^8.49.0",
+      },
+    },
+    "packages/shared": {
+      "name": "@repo/shared",
+      "version": "0.0.0",
+      "dependencies": {
+        "elysia": "latest",
+        "qrcode": "^1.5.3",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0",
+        "sharp": "^0.33.5",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "*",
+        "@repo/typescript-config": "*",
+        "@types/node": "^22.15.3",
+        "@types/react": "19.2.2",
+        "@types/react-dom": "19.2.2",
+        "eslint": "^9.39.1",
+        "typescript": "5.9.2",
       },
     },
     "packages/typescript-config": {
@@ -246,6 +267,8 @@
     "@nolyfill/is-core-module": ["@nolyfill/is-core-module@1.0.39", "", {}, "sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA=="],
 
     "@repo/eslint-config": ["@repo/eslint-config@workspace:packages/eslint-config"],
+
+    "@repo/shared": ["@repo/shared@workspace:packages/shared"],
 
     "@repo/typescript-config": ["@repo/typescript-config@workspace:packages/typescript-config"],
 
