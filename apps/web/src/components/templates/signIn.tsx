@@ -33,7 +33,7 @@ export default function SigninForm({ handleSignUp }: { handleSignUp: () => void 
   return (
     <Fragment>
       <div className='flex flex-col items-center justify-center w-full'>
-        <QrCode className='mb-2 h-8 w-8' />
+        <QrCode className='mb-2 h-12 w-12' />
         <h4 className='scroll-m-20 text-xl font-semibold tracking-tight'>Welcome back!</h4>
         <p className='text-sm text-muted-foreground'>
           Enter your credentials to login to your account.
@@ -129,7 +129,7 @@ export default function SigninForm({ handleSignUp }: { handleSignUp: () => void 
       <div className='flex justify-center gap-2 md:justify-start w-full mt-4'>
         <p className='text-muted-foreground text-sm max-w-sm'>
           Don&apos;t have an account?{' '}
-          <a onClick={handleSignUp} className='text-blue-400'>
+          <a onClick={handleSignUp} className='cursor-pointer text-primary hover:text-primary/80'>
             Create an account
           </a>
         </p>
