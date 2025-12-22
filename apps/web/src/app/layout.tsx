@@ -1,13 +1,8 @@
 import { Navbar } from '@/components/blocks/navbar';
-import Providers from '@/components/providers';
+import Providers from '@/layout/providers';
 import type { Metadata } from 'next';
 import { Merriweather, Outfit } from 'next/font/google';
 import './globals.css';
-
-export const metadata: Metadata = {
-  title: 'QRaftHive',
-  description: 'QRaftHive',
-};
 
 const outfitSans = Outfit({
   variable: '--font-outfit-sans',
@@ -19,6 +14,11 @@ const merriweather = Merriweather({
   subsets: ['latin'],
   weight: ['400'],
 });
+
+export const metadata: Metadata = {
+  title: 'QRaftHive',
+  description: 'QRaftHive',
+};
 
 export default function RootLayout({
   children,

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { ModeToggle } from '../ui/darkTheme';
+import SelectLanguage from '../ui/selectLanguage';
 import { Separator } from '../ui/separator';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 
@@ -81,6 +82,7 @@ export function Navbar() {
           <div className='flex items-center space-x-3'>
             <ModeToggle rounded variant='link' />
             <Separator orientation='vertical' className='h-6' />
+            <SelectLanguage />
             <Button
               variant='ghost'
               className={cn(

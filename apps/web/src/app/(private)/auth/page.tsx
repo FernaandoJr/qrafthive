@@ -1,4 +1,4 @@
-import { DemoPage } from '@/components/login-page';
+import { DemoPage } from '@/components/templates/auth';
 
 export default function AuthPage() {
   return (

@@ -1,8 +1,8 @@
 'use client';
-import { GradientMesh } from '@/components/gradient-mesh';
+import { GradientMesh } from '@/components/ui/gradientMesh';
 import { useState } from 'react';
-import SigninForm from './templates/signIn';
-import SignupForm from './templates/signUp';
+import SigninForm from './signIn';
+import SignupForm from './signUp';
 
 export function DemoPage() {
   const [isSignup, setIsSignup] = useState(false);

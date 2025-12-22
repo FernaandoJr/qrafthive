@@ -3,18 +3,14 @@ import i18n, { t } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 // PT-BR
-import commonPtBR from './locales/ptBR/common.json';
-import errorPtBR from './locales/ptBR/error.json';
-import warningPtBR from './locales/ptBR/warning.json';
+import commonPtBR from './locales/ptBR/common.json' with { type: 'json' };
+import errorPtBR from './locales/ptBR/error.json' with { type: 'json' };
+import warningPtBR from './locales/ptBR/warning.json' with { type: 'json' };
 
 // EN-US
-import commonEnUS from './locales/enUS/common.json';
-import errorEnUS from './locales/enUS/error.json';
-import warningEnUS from './locales/enUS/warning.json';
-// IT-IT
-import commonItIT from './locales/itIT/common.json';
-import errorItIT from './locales/itIT/error.json';
-import warningItIT from './locales/itIT/warning.json';
+import commonEnUS from './locales/enUS/common.json' with { type: 'json' };
+import errorEnUS from './locales/enUS/error.json' with { type: 'json' };
+import warningEnUS from './locales/enUS/warning.json' with { type: 'json' };
 
 const resources = {
   ptBR: {
@@ -27,11 +23,6 @@ const resources = {
     error: errorEnUS,
     warning: warningEnUS,
   },
-  itIT: {
-    common: { ...commonItIT },
-    error: errorItIT,
-    warning: warningItIT,
-  },
 };
 
 // Ler idioma do cookie se existir
@@ -40,10 +31,10 @@ const getInitialLanguage = (): string => {
     const cookies = document.cookie.split(';');
     const localeCookie = cookies.find((c) => c.trim().startsWith('NEXT_LOCALE='));
     if (localeCookie) {
-      return localeCookie.split('=')[1].trim();
+      return localeCookie.split('=')[1]?.trim() ?? 'enUS';
     }
   }
-  return 'ptBR';
+  return 'enUS';
 };
 
 i18n.use(initReactI18next).init({

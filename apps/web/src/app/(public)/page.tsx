@@ -1,4 +1,4 @@
-import { AcmeHero } from '@/components/acme-hero';
+import { AcmeHero } from '@/components/templates/hero';
 
 export default function Home() {
   return (
