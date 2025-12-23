@@ -6,14 +6,17 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "@repo/shared": "workspace:*",
     "@elysiajs/cors": "^0.8.0",
-    "elysia": "latest"
+    "@repo/shared": "workspace:*",
+    "better-auth": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "elysia": "latest",
+    "mongodb": "^7.0.0"
   },
   "devDependencies": {
-    "bun-types": "latest",
-		"@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*"
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "bun-types": "latest"
   },
   "module": "src/index.js"
 }
